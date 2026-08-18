@@ -134,9 +134,23 @@ const createdLabel = (createdAt) => {
 }
 
     exports.name = "ostar-dsh-left-sidebar"
-    exports.inject = ["slots"]
+    exports.inject = ["slots", "workspaces", "sessions"]
 
     exports.apply = function apply(ctx) {
+  // web2 运行时不再注入全局 styles，按官方插件模式自行注入 <style>（data-plugin 戳记由模块系统认领）
+  const styles = {
+    insert(css) {
+      if (typeof document === 'undefined') return
+      const tagId = 'ostar-dsh-left-sidebar/client.css'
+      if (document.querySelector('style[data-plugin-css=' + JSON.stringify(tagId) + ']')) return
+      const tag = document.createElement('style')
+      tag.dataset.plugin = 'ostar-dsh-left-sidebar'
+      tag.dataset.pluginCss = tagId
+      tag.textContent = css
+      document.head.appendChild(tag)
+    }
+  }
+
   const slots = ctx.get('slots')
   if (slots === undefined) return
 
@@ -673,7 +687,7 @@ const createdLabel = (createdAt) => {
   }
 
   slots.inject('sidebar.workspaces', () => slots.register(
-    { name: 'sidebar.workspaces' },
+    { name: 'sidebar.workspaces', priority: -100 },
     (props) => React.createElement(WorkspaceBrowser, props || {}),
   ))
 }
