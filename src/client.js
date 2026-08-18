@@ -27,9 +27,14 @@
  * 胜出，替换官方浏览器）；所有图标为官方 SVG path 的内联复刻（不可 import）；
  * 全部样式使用官方主题 token（--dsw-alias-* / --dsw-static-*）。
  */
-export const name = 'ostar-dsh-left-sidebar'
+window.__ModuleLoader__.load({
+  id: "ostar-dsh-left-sidebar",
+  factory: (require) => {
+    const module = { exports: {} }
+    const exports = module.exports
+    const React = require("react")
 
-const byRecency = (a, b) => b.updatedAt - a.updatedAt
+    const byRecency = (a, b) => b.updatedAt - a.updatedAt
 
 const ICONS = {
   search: { vb: '0 0 16 16', paths: [
@@ -128,7 +133,10 @@ const createdLabel = (createdAt) => {
   return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日 ' + p2(d.getHours()) + ':' + p2(d.getMinutes())
 }
 
-export function apply(ctx) {
+    exports.name = "ostar-dsh-left-sidebar"
+    exports.inject = ["slots"]
+
+    exports.apply = function apply(ctx) {
   const slots = ctx.get('slots')
   if (slots === undefined) return
 
@@ -669,3 +677,7 @@ export function apply(ctx) {
     (props) => React.createElement(WorkspaceBrowser, props || {}),
   ))
 }
+
+    return module.exports
+  },
+})
