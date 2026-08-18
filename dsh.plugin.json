@@ -1,0 +1,16 @@
+{
+  "id": "dsh-external/ostar-dsh-left-sidebar",
+  "version": "0.1.0",
+  "main": "./src/index.js",
+  "description": "左侧边栏工作区管理器：批量删除工作区 / 批量·单选删除会话 / 一键折叠·展开全部。官方工作区浏览器功能与交互完整保留，管理按钮叠加在工作区按钮行。",
+  "engines": {
+    "dsh": ">=0.0.1"
+  },
+  "contributes": {
+    "tools": [],
+    "skills": []
+  },
+  "client": {
+    "main": "./src/client.js"
+  }
+}

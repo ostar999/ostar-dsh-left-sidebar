@@ -1,0 +1,11 @@
+# ostar-dsh-left-sidebar bundle patch
+#
+# 这是 `dsh.bundle.patch` 层：通过官方 CLI 安装时——
+#
+#   dsh plugin --profile <name> add ostar-dsh-left-sidebar@<version>
+#
+# —— 命令会依据该声明把插件追加进 bundle 栈，profile 启动时自动合并
+# 本补丁（一条 `insert` 插件行），无需手动编辑任何 profile 文件。
+- insert:
+    - id: left-sidebar-manager
+      name: 'ostar-dsh-left-sidebar'
