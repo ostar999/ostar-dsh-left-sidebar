@@ -104,6 +104,9 @@ export function apply(ctx) {
           },
           agentOptions: {},
         })
+        // 与官方 fork 相同:创建后把副本 attach 到目标工作区账目,
+        // 触发 domain/changed → host 推送 workspace-changed → client 侧边栏即时显示。
+        await target.attachSession(childId)
         if (mode === 'move') await registry.archiveSession(sourceId)
         json(res, 200, { ok: true, childId })
       } catch (reason) {
