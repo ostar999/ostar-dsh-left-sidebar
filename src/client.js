@@ -511,6 +511,17 @@ const createdLabel = (createdAt) => {
       wsSvc().delete(id).catch((e) => setErr(String(e && e.message ? e.message : e)))
     }
 
+    const refreshStores = () => {
+      try {
+        const svc = ctx.get('sessions')
+        if (svc && typeof svc.refresh === 'function') svc.refresh()
+      } catch (e) { /* 忽略 */ }
+      try {
+        const wsvc = ctx.get('workspaces')
+        if (wsvc && typeof wsvc.refresh === 'function') wsvc.refresh()
+      } catch (e) { /* 忽略 */ }
+    }
+
     const moveSession = (sessionId, targetWsId) => {
       fetch('/ostar-dsh-left-sidebar/migrate', {
         method: 'POST',
@@ -525,6 +536,7 @@ const createdLabel = (createdAt) => {
             return
           }
           if (res && !res.ok) setErr(String(res.error || '迁移失败'))
+          else refreshStores()
         })
         .catch((e) => setErr(String(e && e.message ? e.message : e)))
     }
@@ -543,6 +555,7 @@ const createdLabel = (createdAt) => {
             return
           }
           if (res && !res.ok) setErr(String(res.error || '复制失败'))
+          else refreshStores()
         })
         .catch((e) => setErr(String(e && e.message ? e.message : e)))
     }
