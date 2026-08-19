@@ -229,7 +229,7 @@ const createdLabel = (createdAt) => {
 .wsmgr-err{color:var(--dsw-alias-state-error-primary,#e5484d);padding:8px 12px;font-size:12px}
 .wsmgr-empty{padding:20px 12px;text-align:center;color:var(--dsw-alias-label-tertiary,#8a8a8a);font-size:13px}
 .wsmgr-tip{position:fixed;z-index:90;background:var(--dsw-alias-bg-overlay,#1c1c1f);border:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.35));color:var(--dsw-alias-label-primary,#e8e8e8);font-size:12px;line-height:1.5;padding:3px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.3)}
-.wsmgr-hc{position:fixed;z-index:250;pointer-events:none;background:var(--dsw-alias-bg-overlay,#1c1c1f);border:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.35));border-radius:10px;padding:10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.4);display:flex;flex-direction:column;gap:8px;max-width:340px}
+.wsmgr-hc{position:fixed;z-index:100;box-sizing:border-box;width:244px;padding:12px 16px;border-radius:12px;background:#2C2C2E;box-shadow:var(--dsw-shadow-lv3,0 8px 24px rgba(0,0,0,.4));pointer-events:none;display:flex;flex-direction:column;gap:8px}
 .wsmgr-hc-title{color:#fff;font-size:14px;line-height:20px;overflow-wrap:break-word}
 .wsmgr-hc-path{color:#cfd3d6;font-size:12px;line-height:16px;word-break:break-all}
 .wsmgr-hc-time{color:#cfd3d6;font-size:12px;line-height:16px}
@@ -574,7 +574,7 @@ const createdLabel = (createdAt) => {
               ),
           React.createElement('span', { className: 'wsmgr-rowActions' },
             isReal ? React.createElement(TButton, { iconName: 'ellipsis', size: 16, label: '工作区操作', noTip: true, cls: 'wsmgr-iconBtn', onClick: openRowMenu('ws', g.key, g.label, workspaceMenuItems) }) : null,
-            React.createElement(TButton, { iconName: 'plus', size: 16, label: '新建会话', cls: 'wsmgr-iconBtn', onClick: (e) => { e.stopPropagation(); if (isReal) startSession(g.key) } }),
+            React.createElement(TButton, { iconName: 'plus', size: 16, label: '新建会话', noTip: true, cls: 'wsmgr-iconBtn', onClick: (e) => { e.stopPropagation(); if (isReal) startSession(g.key) } }),
             manage && isReal ? React.createElement('button', { type: 'button', className: 'wsmgr-del', title: '删除此工作区', onClick: (e) => { e.stopPropagation(); setConfirming({ wsIds: [g.key], sesIds: [] }) }, disabled: busy }, '删除') : null,
           ),
         ),
