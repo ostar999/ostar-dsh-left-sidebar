@@ -169,13 +169,14 @@ const createdLabel = (createdAt) => {
 .wsmgr-ibtn:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.14))}
 .wsmgr-ibtn.on{color:var(--dsw-alias-brand-primary,#4c6ef5)}
 .wsmgr-hactions{opacity:1;display:flex;align-items:center;gap:2px;flex:none;overflow:visible}
-.wsmgr-menu{position:absolute;top:34px;right:0;z-index:60;background:var(--dsw-alias-bg-overlay,#202024);border:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.35));border-radius:10px;padding:6px;min-width:150px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.wsmgr-menu{position:absolute;top:34px;right:0;z-index:1100;box-sizing:border-box;padding:4px;display:flex;flex-direction:column;gap:0;border:1px solid var(--dsw-alias-border-inverted,rgba(128,128,128,.5));border-radius:12px;background:var(--dsw-specific-menu,var(--dsw-alias-bg-layer-3,#242428));box-shadow:var(--dsw-shadow-lv3,0 8px 24px rgba(0,0,0,.4));min-width:218px;max-width:360px}
 .wsmgr-menu-sec{margin-bottom:4px}
-.wsmgr-menu-title{font-size:11px;color:var(--dsw-alias-label-tertiary,#8a8a8a);padding:3px 8px}
-.wsmgr-menu-opt{padding:5px 8px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--dsw-alias-label-primary,#e8e8e8);display:flex;align-items:center;gap:8px}
-.wsmgr-menu-opt:hover{background:rgba(128,128,128,.12)}
+.wsmgr-menu-title{font-size:12px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8a8a8a);padding:4px 7px}
+.wsmgr-menu-opt{display:flex;align-items:center;gap:6px;width:100%;min-height:26px;padding:3px 7px;border:none;border-radius:5px;background:transparent;cursor:pointer;font-size:12px;line-height:18px;color:var(--dsw-alias-label-primary,#e8e8e8);text-align:left;box-sizing:border-box}
+.wsmgr-menu-opt:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
 .wsmgr-menu-opt.on{color:var(--dsw-alias-brand-primary,#4c6ef5)}
 .wsmgr-menu-opt.danger{color:var(--dsw-alias-state-error-primary,#e5484d)}
+.wsmgr-menu-opt.danger:hover{background:var(--dsw-alias-interactive-bg-hover-danger,rgba(229,72,77,.12))}
 .wsmgr-toolbar{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 8px;margin-bottom:4px;border:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.3));border-radius:10px;background:rgba(128,128,128,.05)}
 .wsmgr-confirm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:6px 8px;margin-bottom:4px;border:1px solid rgba(245,165,36,.5);border-radius:10px;background:rgba(245,165,36,.08);font-size:12px;color:var(--dsw-alias-label-primary,#e8e8e8)}
 .wsmgr-tbtn{background:transparent;border:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.4));color:var(--dsw-alias-label-primary,#e8e8e8);border-radius:6px;padding:2px 8px;font-size:12px;cursor:pointer;line-height:1.6}
@@ -220,15 +221,17 @@ const createdLabel = (createdAt) => {
 .wsmgr-check{flex:none;accent-color:var(--dsw-alias-brand-primary,#4c6ef5);margin:0;cursor:pointer;width:14px;height:14px}
 .wsmgr-del{flex:none;background:transparent;border:none;color:var(--dsw-alias-state-error-primary,#e5484d);font-size:12px;cursor:pointer;padding:1px 5px;border-radius:4px;opacity:.85;line-height:16px}
 .wsmgr-del:hover{opacity:1;background:rgba(229,72,77,.12)}
-.wsmgr-menu-mask{position:fixed;inset:0;z-index:75;background:transparent;pointer-events:auto}
-.wsmgr-rowmenu{position:fixed;z-index:80;background:var(--dsw-alias-bg-overlay,#202024);border:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.35));border-radius:10px;padding:5px;min-width:140px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
-.wsmgr-rowmenu-item{display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--dsw-alias-label-primary,#e8e8e8)}
-.wsmgr-rowmenu-item:hover{background:rgba(128,128,128,.12)}
+.wsmgr-menu-mask{position:fixed;inset:0;z-index:1050;background:transparent;pointer-events:auto}
+.wsmgr-rowmenu{position:fixed;z-index:1100;box-sizing:border-box;padding:4px;display:flex;flex-direction:column;gap:0;border:1px solid var(--dsw-alias-border-inverted,rgba(128,128,128,.5));border-radius:12px;background:var(--dsw-specific-menu,var(--dsw-alias-bg-layer-3,#242428));box-shadow:var(--dsw-shadow-lv3,0 8px 24px rgba(0,0,0,.4));min-width:218px;max-width:360px}
+.wsmgr-rowmenu-item{display:flex;align-items:center;gap:6px;width:100%;min-height:26px;padding:3px 7px;border:none;border-radius:5px;background:transparent;cursor:pointer;font-size:12px;line-height:18px;color:var(--dsw-alias-label-primary,#e8e8e8);text-align:left;box-sizing:border-box}
+.wsmgr-rowmenu-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
 .wsmgr-rowmenu-item.danger{color:var(--dsw-alias-state-error-primary,#e5484d)}
-.wsmgr-rowmenu-item svg{flex:none}
+.wsmgr-rowmenu-item.danger:hover{background:var(--dsw-alias-interactive-bg-hover-danger,rgba(229,72,77,.12))}
+.wsmgr-rowmenu-item svg{flex:none;width:16px;height:16px}
 .wsmgr-err{color:var(--dsw-alias-state-error-primary,#e5484d);padding:8px 12px;font-size:12px}
 .wsmgr-empty{padding:20px 12px;text-align:center;color:var(--dsw-alias-label-tertiary,#8a8a8a);font-size:13px}
-.wsmgr-tip{position:fixed;z-index:90;background:var(--dsw-alias-bg-overlay,#1c1c1f);border:1px solid var(--dsw-alias-border-l1,rgba(128,128,128,.35));color:var(--dsw-alias-label-primary,#e8e8e8);font-size:12px;line-height:1.5;padding:3px 8px;border-radius:6px;white-space:nowrap;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.3)}
+.wsmgr-tip{position:fixed;z-index:100;width:max-content;max-width:50vw;padding:3px 7px;border-radius:8px;background:var(--dsw-alias-tooltip-bg,#2C2C2E);color:var(--dsw-static-neutral-bluish-00,#f5f5f6);font-size:13px;line-height:20px;white-space:pre-line;overflow-wrap:break-word;pointer-events:none;animation:wsmgr-tip-in .15s var(--ds-ease-in-out,ease-in-out)}
+@keyframes wsmgr-tip-in{from{opacity:0}}
 .wsmgr-hc{position:fixed;z-index:100;box-sizing:border-box;width:244px;padding:12px 16px;border-radius:12px;background:#2C2C2E;box-shadow:var(--dsw-shadow-lv3,0 8px 24px rgba(0,0,0,.4));pointer-events:none;display:flex;flex-direction:column;gap:8px}
 .wsmgr-hc-title{color:#fff;font-size:14px;line-height:20px;overflow-wrap:break-word}
 .wsmgr-hc-path{color:#cfd3d6;font-size:12px;line-height:16px;word-break:break-all}
