@@ -93,6 +93,13 @@ const ICONS = {
   archive: { vb: '0 0 20 20', paths: [
     { fr: 'evenodd', cr: 'evenodd', d: 'M15.8659 2.05975C17.2603 2.05995 18.3913 3.19096 18.3914 4.58527V5.4874C18.3914 6.02747 18.2192 6.52672 17.9303 6.93735C17.9336 6.96524 17.9388 6.99318 17.9388 7.02195V12.8884C17.9388 13.6345 17.9395 14.2379 17.8996 14.7254C17.8642 15.1593 17.7936 15.5499 17.6373 15.9141L17.5654 16.0685C17.278 16.6328 16.8405 17.1046 16.3038 17.434L16.0679 17.5661C15.66 17.7739 15.2196 17.8598 14.7237 17.9003C14.2362 17.9401 13.6327 17.9405 12.8867 17.9405H7.11122C6.36511 17.9405 5.76171 17.9401 5.27418 17.9003C4.84051 17.8649 4.44949 17.7952 4.08545 17.6391L3.93104 17.5661C3.36673 17.2785 2.89392 16.8414 2.56465 16.3044L2.43245 16.0685C2.22473 15.6608 2.13878 15.2211 2.09825 14.7254C2.05841 14.2379 2.05912 13.6345 2.05912 12.8884V7.02195C2.05912 6.99284 2.06422 6.96449 2.06758 6.93629C1.77931 6.52592 1.60858 6.02687 1.60858 5.4874V4.58527C1.60876 3.19084 2.73962 2.05975 4.1341 2.05975H15.8659ZM16.4984 7.92936C16.296 7.98169 16.0847 8.01288 15.8659 8.01291H4.1341C3.91478 8.01291 3.70246 7.98194 3.49955 7.92936V12.8884C3.49955 13.6582 3.50053 14.1927 3.53445 14.608C3.56769 15.0146 3.62923 15.244 3.71635 15.415L3.7925 15.5514C3.98339 15.8627 4.25749 16.1165 4.58464 16.2833L4.72529 16.3435C4.88095 16.3993 5.08638 16.4402 5.39158 16.4651C5.80685 16.4991 6.34138 16.5001 7.11122 16.5001H12.8867C13.6564 16.5001 14.1911 16.499 14.6063 16.4651C15.0128 16.432 15.2423 16.3703 15.4133 16.2833L15.5508 16.2061C15.8618 16.0152 16.116 15.7419 16.2827 15.415L16.3429 15.2732C16.3985 15.1177 16.4396 14.9128 16.4645 14.608C16.4985 14.1927 16.4984 13.6583 16.4984 12.8884V7.92936ZM4.1341 3.50019C3.53511 3.50019 3.0492 3.98631 3.04902 4.58527V5.4874C3.04902 6.08649 3.535 6.57248 4.1341 6.57248H15.8659C16.4648 6.57228 16.951 6.08638 16.951 5.4874V4.58527C16.9509 3.98644 16.4647 3.50038 15.8659 3.50019H4.1341Z' },
   ] },
+  rightUp: { vb: '0 0 16 16', paths: [
+    { d: 'M13.588429 5.147807C13.588429 4.739638 13.587271 4.403003 13.582013 4.118684L1.703098 15.99968L0.85155 15.148178L0 14.294485L11.878915 2.413442C11.594721 2.408199 11.257569 2.409154 10.849776 2.409154H2.400594V0.000001H10.849776C11.644471 0.000001 12.338899 -0.001059 12.901622 0.059909C13.486363 0.123352 14.071136 0.265493 14.598303 0.648292C14.886598 0.857751 15.141981 1.110984 15.351433 1.399281C15.734578 1.926807 15.876362 2.512925 15.939743 3.098105C16.000775 3.660718 15.99968 4.353347 15.99968 5.147807V13.599133H13.588429V5.147807Z' },
+  ] },
+  copy: { vb: '0 0 16 16', paths: [
+    { d: 'M6.14929 4.02032C7.11197 4.02032 7.87983 4.02016 8.49597 4.07598C9.12128 4.13269 9.65792 4.25188 10.1415 4.53106C10.7202 4.8653 11.2008 5.3459 11.535 5.92462C11.8142 6.40818 11.9334 6.94481 11.9901 7.57012C12.0459 8.18625 12.0458 8.95419 12.0458 9.9168C12.0458 10.8795 12.0459 11.6473 11.9901 12.2635C11.9334 12.8888 11.8142 13.4254 11.535 13.909C11.2008 14.4877 10.7202 14.9683 10.1415 15.3025C9.65792 15.5817 9.12128 15.7009 8.49597 15.7576C7.87984 15.8134 7.11196 15.8133 6.14929 15.8133C5.18667 15.8133 4.41874 15.8134 3.80261 15.7576C3.1773 15.7009 2.64067 15.5817 2.1571 15.3025C1.5784 14.9683 1.09778 14.4877 0.76355 13.909C0.484366 13.4254 0.365184 12.8888 0.308472 12.2635C0.252649 11.6473 0.252808 10.8795 0.252808 9.9168C0.252808 8.95418 0.252664 8.18625 0.308472 7.57012C0.365184 6.94481 0.484366 6.40818 0.76355 5.92462C1.09777 5.34589 1.57839 4.86529 2.1571 4.53106C2.64067 4.25188 3.1773 4.13269 3.80261 4.07598C4.41874 4.02017 5.18666 4.02032 6.14929 4.02032ZM6.14929 5.37774C5.16181 5.37774 4.46634 5.37761 3.92566 5.42657C3.39434 5.47472 3.07859 5.56574 2.83582 5.70587C2.4632 5.92106 2.15354 6.2307 1.93835 6.60333C1.79823 6.8461 1.70721 7.16185 1.65906 7.69317C1.6101 8.23385 1.61023 8.92933 1.61023 9.9168C1.61023 10.9043 1.61009 11.5998 1.65906 12.1404C1.70721 12.6717 1.79823 12.9875 1.93835 13.2303C2.15356 13.6029 2.46321 13.9126 2.83582 14.1277C3.07859 14.2679 3.39434 14.3589 3.92566 14.407C4.46634 14.456 5.16182 14.4559 6.14929 14.4559C7.13682 14.4559 7.83224 14.456 8.37292 14.407C8.90425 14.3589 9.21999 14.2679 9.46277 14.1277C9.83535 13.9126 10.145 13.6029 10.3602 13.2303C10.5004 12.9875 10.5914 12.6717 10.6395 12.1404C10.6885 11.5998 10.6884 10.9043 10.6884 9.9168C10.6884 8.92934 10.6885 8.23384 10.6395 7.69317C10.5914 7.16185 10.5004 6.8461 10.3602 6.60333C10.1451 6.23071 9.83536 5.92107 9.46277 5.70587C9.21999 5.56574 8.90424 5.47472 8.37292 5.42657C7.83224 5.3776 7.13682 5.37774 6.14929 5.37774ZM9.80164 0.367975C10.7638 0.367975 11.5314 0.36788 12.1473 0.423639C12.7726 0.480307 13.3093 0.598759 13.7928 0.877741C14.3717 1.21192 14.8521 1.69355 15.1864 2.27227C15.4655 2.75574 15.5857 3.29164 15.6425 3.9168C15.6983 4.53301 15.6971 5.3016 15.6971 6.26446V7.82989C15.6971 8.29264 15.6989 8.58993 15.6649 8.84844C15.4668 10.3525 14.401 11.5738 12.9833 11.9988V10.5467C13.6973 10.1903 14.2105 9.49662 14.3192 8.67169C14.3387 8.52347 14.3407 8.3358 14.3407 7.82989V6.26446C14.3407 5.27706 14.3398 4.58149 14.2909 4.04083C14.2428 3.50968 14.1526 3.19372 14.0126 2.95098C13.7974 2.57849 13.4876 2.26869 13.1151 2.05352C12.8724 1.91347 12.5564 1.82237 12.0253 1.77423C11.4847 1.72528 10.7888 1.7254 9.80164 1.7254H7.71472C6.7562 1.72558 5.92665 2.27697 5.52332 3.07891H4.07019C4.54221 1.51132 5.9932 0.368186 7.71472 0.367975H9.80164Z' },
+  ] },
+
 }
 
 const MATRIX_CELLS = [[0, 0], [4, 0], [8, 0], [8, 4], [8, 8], [4, 8], [0, 8], [0, 4]]
@@ -228,6 +235,8 @@ const createdLabel = (createdAt) => {
 .wsmgr-rowmenu-item.danger{color:var(--dsw-alias-state-error-primary,#e5484d)}
 .wsmgr-rowmenu-item.danger:hover{background:var(--dsw-alias-interactive-bg-hover-danger,rgba(229,72,77,.12))}
 .wsmgr-rowmenu-item svg{flex:none;width:16px;height:16px}
+.wsmgr-rowmenu-label{padding:4px 7px;font-size:11px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8a8a8a)}
+.wsmgr-rowmenu-empty{padding:8px 10px;font-size:12px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8a8a8a)}
 .wsmgr-err{color:var(--dsw-alias-state-error-primary,#e5484d);padding:8px 12px;font-size:12px}
 .wsmgr-empty{padding:20px 12px;text-align:center;color:var(--dsw-alias-label-tertiary,#8a8a8a);font-size:13px}
 .wsmgr-tip{position:fixed;z-index:100;width:max-content;max-width:50vw;padding:3px 7px;border-radius:8px;background:var(--dsw-alias-tooltip-bg,#2C2C2E);color:var(--dsw-static-neutral-bluish-00,#f5f5f6);font-size:13px;line-height:20px;white-space:pre-line;overflow-wrap:break-word;pointer-events:none;animation:wsmgr-tip-in .15s var(--ds-ease-in-out,ease-in-out)}
@@ -324,6 +333,8 @@ const createdLabel = (createdAt) => {
     const [rowMenu, setRowMenu] = React.useState(null)
     const [renaming, setRenaming] = React.useState(null)
     const [hc, setHc] = React.useState(null)
+    const [pickTarget, setPickTarget] = React.useState(null)
+    const pickAnchor = React.useState({ current: null })[0]
     const now = Date.now()
 
     const wsSvc = () => ctx.get('workspaces')
@@ -500,10 +511,22 @@ const createdLabel = (createdAt) => {
       wsSvc().delete(id).catch((e) => setErr(String(e && e.message ? e.message : e)))
     }
 
+    const moveSession = (sessionId, targetWsId) => {
+      wsSvc().insertSessionBefore(targetWsId, sessionId).catch((e) => setErr(String(e && e.message ? e.message : e)))
+    }
+
+    const copySession = (sessionId, targetWsId) => {
+      sesSvc().fork({ sessionId: sessionId, increaseTitle: true })
+        .then((childId) => wsSvc().insertSessionBefore(targetWsId, childId))
+        .catch((e) => setErr(String(e && e.message ? e.message : e)))
+    }
+
     const sessionMenuItems = [
       { id: 'rename', label: '重命名', icon: 'edit' },
       { id: 'fork', label: '分叉会话', icon: 'branch' },
       { id: 'archive', label: '归档会话', icon: 'archive' },
+      { id: 'move', label: '迁移会话', icon: 'rightUp' },
+      { id: 'copy', label: '复制会话', icon: 'copy' },
       { id: 'delete', label: '删除会话', icon: 'trash', danger: true },
     ]
     const workspaceMenuItems = [
@@ -544,6 +567,10 @@ const createdLabel = (createdAt) => {
               }
               else if (item.id === 'fork') forkSession(rowMenu.id)
               else if (item.id === 'archive') archiveOne(rowMenu.id)
+              else if (item.id === 'move' || item.id === 'copy') {
+                pickAnchor.current = rowMenu.rect
+                setPickTarget({ kind: item.id, sessionId: rowMenu.id, title: rowMenu.title })
+              }
             },
           }, icon(item.icon, 16), React.createElement('span', null, item.label))),
         ),
@@ -658,6 +685,39 @@ const createdLabel = (createdAt) => {
       }
     }
 
+    let pickEl = null
+    if (pickTarget) {
+      const owner = workspaces.find((w) => w.sessionIds.includes(pickTarget.sessionId))
+      const targets = workspaces.filter((w) => w.workspaceId !== (owner ? owner.workspaceId : undefined))
+      const iw = typeof window !== 'undefined' ? window.innerWidth : 1200
+      const ih = typeof window !== 'undefined' ? window.innerHeight : 800
+      const anchorRect = pickAnchor.current
+      let left = (anchorRect ? anchorRect.right : iw / 2) - 218 + 4
+      if (left < 8) left = 8
+      let top = (anchorRect ? anchorRect.bottom : 80) + 4
+      if (top + 220 > ih - 8) top = Math.max(8, (anchorRect ? anchorRect.top : 80) - 220)
+      pickEl = React.createElement('div', null,
+        React.createElement('div', { className: 'wsmgr-menu-mask', onClick: () => setPickTarget(null) }),
+        React.createElement('div', { className: 'wsmgr-rowmenu', style: { left: left, top: top } },
+          React.createElement('div', { className: 'wsmgr-rowmenu-label' }, pickTarget.kind === 'move' ? '迁移会话到工作区…' : '复制会话到工作区…'),
+          targets.length === 0
+            ? React.createElement('div', { className: 'wsmgr-rowmenu-empty' }, '没有其他工作区')
+            : targets.map((t) => React.createElement('div', {
+                key: t.workspaceId,
+                className: 'wsmgr-rowmenu-item',
+                onClick: () => {
+                  const wid = t.workspaceId
+                  const sid = pickTarget.sessionId
+                  const kind = pickTarget.kind
+                  setPickTarget(null)
+                  if (kind === 'move') moveSession(sid, wid)
+                  else copySession(sid, wid)
+                },
+              }, icon('folderClose', 16), React.createElement('span', { style: { flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, t.title))),
+        ),
+      )
+    }
+
     return React.createElement('div', { className: 'wsmgr-root' + (wide ? '' : ' rail') },
       React.createElement('div', { className: 'wsmgr-header' },
         wide ? React.createElement('span', { className: 'wsmgr-hlabel', style: searchOpen ? { opacity: 0, visibility: 'hidden', maxWidth: 0, marginRight: -4 } : {} }, groupBy === 'flat' ? '会话' : '工作区') : null,
@@ -708,6 +768,7 @@ const createdLabel = (createdAt) => {
       err ? React.createElement('div', { className: 'wsmgr-err' }, err) : null,
       React.createElement('div', { className: 'wsmgr-list' }, listBody),
       rowMenuEl,
+      pickEl,
       hcEl,
     )
   }
