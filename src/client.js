@@ -256,7 +256,7 @@ const createdLabel = (createdAt) => {
       if (top + 24 > ih) top = ih - 24
       setTip({ label: props.label, left: left, top: top })
     }
-    return React.createElement('span', { style: { display: 'inline-flex', flex: 'none', alignItems: 'center', justifyContent: 'center' }, onMouseEnter: show, onMouseLeave: () => setTip(null) },
+    return React.createElement('span', { style: { display: 'inline-flex', flex: 'none', alignItems: 'center', justifyContent: 'center' }, onMouseEnter: (e) => { if (!props.noTip) show() }, onMouseLeave: () => setTip(null) },
       React.createElement('button', {
         type: 'button',
         className: props.cls || 'wsmgr-ibtn',
@@ -490,6 +490,7 @@ const createdLabel = (createdAt) => {
 
     const openRowMenu = (kind, id, title, items) => (e) => {
       e.stopPropagation()
+      setHc(null)
       if (rowMenu && rowMenu.id === id) { setRowMenu(null); return }
       const r = e.currentTarget.getBoundingClientRect()
       setRowMenu({ kind: kind, id: id, title: title, items: items, rect: { top: r.top, bottom: r.bottom, left: r.left, right: r.right } })
@@ -531,7 +532,7 @@ const createdLabel = (createdAt) => {
         key: m.id,
         className: 'wsmgr-sessionRow' + (m.id === current ? ' selected' : '') + (rowMenu && rowMenu.id === m.id ? ' menuOpen' : ''),
         onClick: () => open(m.id),
-        onMouseEnter: (e) => { const r = e.currentTarget.getBoundingClientRect(); setHc({ kind: 'ses', id: m.id, rect: { top: r.top, right: r.right } }) },
+        onMouseEnter: (e) => { if (rowMenu && rowMenu.id === m.id) return; const r = e.currentTarget.getBoundingClientRect(); setHc({ kind: 'ses', id: m.id, rect: { top: r.top, right: r.right } }) },
         onMouseLeave: () => setHc((prev) => prev && prev.id === m.id && prev.kind === 'ses' ? null : prev),
       },
         manage ? React.createElement('input', { type: 'checkbox', className: 'wsmgr-check', checked: selSes.has(m.id), onChange: () => toggleSes(m.id), onClick: (e) => e.stopPropagation() }) : null,
@@ -541,7 +542,7 @@ const createdLabel = (createdAt) => {
           : React.createElement('span', { className: 'wsmgr-title' }, m.blank ? '新会话' : m.displayTitle),
         !m.blank ? React.createElement('span', { className: 'wsmgr-time' }, timeText(m.updatedAt, now)) : null,
         !m.blank ? React.createElement('span', { className: 'wsmgr-rowActions' },
-          React.createElement(TButton, { iconName: 'ellipsis', size: 16, label: '会话操作', cls: 'wsmgr-iconBtn', onClick: openRowMenu('ses', m.id, m.displayTitle, sessionMenuItems) }),
+          React.createElement(TButton, { iconName: 'ellipsis', size: 16, label: '会话操作', noTip: true, cls: 'wsmgr-iconBtn', onClick: openRowMenu('ses', m.id, m.displayTitle, sessionMenuItems) }),
           manage ? React.createElement('button', { type: 'button', className: 'wsmgr-del', title: '删除此会话', onClick: (e) => { e.stopPropagation(); setConfirming({ wsIds: [], sesIds: [m.id] }) }, disabled: busy }, '删除') : null,
         ) : null,
       )
@@ -556,7 +557,7 @@ const createdLabel = (createdAt) => {
         React.createElement('div', {
           className: 'wsmgr-projectRow' + (rowMenu && rowMenu.id === g.key ? ' menuOpen' : ''),
           onClick: () => toggleGroup(g.key),
-          onMouseEnter: (e) => { const r = e.currentTarget.getBoundingClientRect(); setHc({ kind: 'ws', id: g.key, rect: { top: r.top, right: r.right } }) },
+          onMouseEnter: (e) => { if (rowMenu && rowMenu.id === g.key) return; const r = e.currentTarget.getBoundingClientRect(); setHc({ kind: 'ws', id: g.key, rect: { top: r.top, right: r.right } }) },
           onMouseLeave: () => setHc((prev) => prev && prev.id === g.key && prev.kind === 'ws' ? null : prev),
         },
           manage && isReal ? React.createElement('input', { type: 'checkbox', className: 'wsmgr-check', checked: selWs.has(g.key), onChange: () => toggleWs(g.key), onClick: (e) => e.stopPropagation() }) : null,
@@ -572,7 +573,7 @@ const createdLabel = (createdAt) => {
                 React.createElement('span', { className: 'wsmgr-title' }, g.label),
               ),
           React.createElement('span', { className: 'wsmgr-rowActions' },
-            isReal ? React.createElement(TButton, { iconName: 'ellipsis', size: 16, label: '工作区操作', cls: 'wsmgr-iconBtn', onClick: openRowMenu('ws', g.key, g.label, workspaceMenuItems) }) : null,
+            isReal ? React.createElement(TButton, { iconName: 'ellipsis', size: 16, label: '工作区操作', noTip: true, cls: 'wsmgr-iconBtn', onClick: openRowMenu('ws', g.key, g.label, workspaceMenuItems) }) : null,
             React.createElement(TButton, { iconName: 'plus', size: 16, label: '新建会话', cls: 'wsmgr-iconBtn', onClick: (e) => { e.stopPropagation(); if (isReal) startSession(g.key) } }),
             manage && isReal ? React.createElement('button', { type: 'button', className: 'wsmgr-del', title: '删除此工作区', onClick: (e) => { e.stopPropagation(); setConfirming({ wsIds: [g.key], sesIds: [] }) }, disabled: busy }, '删除') : null,
           ),
