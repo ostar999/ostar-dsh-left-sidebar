@@ -17,6 +17,9 @@
 
 export const name = 'ostar-dsh-left-sidebar'
 
+/** webServer 为硬依赖:Cordis 等待其就绪后再 apply,确保路由注册。 */
+export const inject = ['webServer']
+
 const ROUTE = '/ostar-dsh-left-sidebar/migrate'
 
 function json(res, status, body) {
