@@ -246,20 +246,42 @@ const createdLabel = (createdAt) => {
   function TButton(props) {
     const [tip, setTip] = React.useState(null)
     const btnRef = React.useState({ current: null })[0]
+    const timerRef = React.useState({ current: null })[0]
     const show = () => {
       const r = btnRef.current ? btnRef.current.getBoundingClientRect() : null
       if (!r) return
       const iw = typeof window !== 'undefined' ? window.innerWidth : 1200
       const ih = typeof window !== 'undefined' ? window.innerHeight : 800
       let left = r.left + r.width / 2
-      let top = r.top - 8
-      if (top < 6) top = r.bottom + 8
+      // 与官方 Tooltip 一致：优先显示在按钮下方 8px（side: bottom），
+      // 下方放不下且上方有空间时自动翻转到上方 8px（官方 EDGE_MARGIN 12）。
+      let top = r.bottom + 8
+      if (top + 28 > ih - 12) top = r.top - 8
       if (left < 40) left = 40
       if (left > iw - 40) left = iw - 40
-      if (top + 24 > ih) top = ih - 24
       setTip({ label: props.label, left: left, top: top })
     }
-    return React.createElement('span', { style: { display: 'inline-flex', flex: 'none', alignItems: 'center', justifyContent: 'center' }, onMouseEnter: (e) => { if (!props.noTip) show() }, onMouseLeave: () => setTip(null) },
+    const onEnter = () => {
+      if (props.noTip) return
+      if (timerRef.current !== null) return
+      const delay = props.delay != null ? props.delay : 0
+      if (delay <= 0) {
+        show()
+        return
+      }
+      timerRef.current = setTimeout(() => {
+        timerRef.current = null
+        show()
+      }, delay)
+    }
+    const onLeave = () => {
+      if (timerRef.current !== null) {
+        clearTimeout(timerRef.current)
+        timerRef.current = null
+      }
+      setTip(null)
+    }
+    return React.createElement('span', { style: { display: 'inline-flex', flex: 'none', alignItems: 'center', justifyContent: 'center' }, onMouseEnter: onEnter, onMouseLeave: onLeave },
       React.createElement('button', {
         type: 'button',
         className: props.cls || 'wsmgr-ibtn',
@@ -641,17 +663,17 @@ const createdLabel = (createdAt) => {
         wide ? React.createElement('span', { className: 'wsmgr-hlabel', style: searchOpen ? { opacity: 0, visibility: 'hidden', maxWidth: 0, marginRight: -4 } : {} }, groupBy === 'flat' ? '会话' : '工作区') : null,
         wide ? React.createElement('div', { className: 'wsmgr-searchSlot' + (searchOpen ? ' open' : '') },
           React.createElement('div', { className: 'wsmgr-search' + (searchOpen ? ' open' : ''), onClick: () => { setMenuOpen(false); setSearchOpen(true) } },
-            React.createElement(TButton, { iconName: 'search', size: searchOpen ? 11 : 14, label: '搜索会话', cls: 'wsmgr-ibtn', onClick: (e) => { e.stopPropagation(); setMenuOpen(false); setSearchOpen(true) } }),
+            React.createElement(TButton, { iconName: 'search', size: searchOpen ? 11 : 14, label: '搜索会话', delay: 500, cls: 'wsmgr-ibtn', onClick: (e) => { e.stopPropagation(); setMenuOpen(false); setSearchOpen(true) } }),
             React.createElement('input', { className: 'wsmgr-search-input', type: 'text', placeholder: '搜索会话…', value: query, autoFocus: searchOpen, onChange: (e) => setQuery(e.target.value), onKeyDown: (e) => { if (e.key === 'Escape') { setQuery(''); setSearchOpen(false) } } }),
-            searchOpen ? React.createElement(TButton, { iconName: 'close', size: 14, label: '清除搜索', cls: 'wsmgr-ibtn', onClick: (e) => { e.stopPropagation(); setQuery(''); setSearchOpen(false) } }) : null,
+            searchOpen ? React.createElement(TButton, { iconName: 'close', size: 14, label: '清除搜索', delay: 500, cls: 'wsmgr-ibtn', onClick: (e) => { e.stopPropagation(); setQuery(''); setSearchOpen(false) } }) : null,
           ),
-        ) : React.createElement(TButton, { iconName: 'search', size: 18, label: '搜索会话', cls: 'wsmgr-ibtn', onClick: () => { setSearchOpen(true); expandSidebar() } }),
+        ) : React.createElement(TButton, { iconName: 'search', size: 18, label: '搜索会话', delay: 500, cls: 'wsmgr-ibtn', onClick: () => { setSearchOpen(true); expandSidebar() } }),
         React.createElement('div', { className: 'wsmgr-hactions', style: wide && searchOpen ? { opacity: 0, visibility: 'hidden', pointerEvents: 'none', maxWidth: 0 } : {} },
-          wide ? React.createElement(TButton, { iconName: 'personal', size: 16, label: '视图选项', cls: 'wsmgr-ibtn' + (menuOpen ? ' on' : ''), onClick: () => setMenuOpen(!menuOpen) }) : null,
-          wide ? React.createElement(TButton, { iconName: 'projectAdd', size: 16, label: '添加工作区', cls: 'wsmgr-ibtn', onClick: addWorkspace }) : null,
-          wide ? React.createElement(TButton, { iconName: 'chevronDown', size: 14, label: '展开全部', cls: 'wsmgr-ibtn', onClick: expandAll }) : null,
-          wide ? React.createElement(TButton, { iconName: 'chevronUp', size: 14, label: '折叠全部', cls: 'wsmgr-ibtn', onClick: collapseAll }) : null,
-          React.createElement(TButton, { iconName: 'checklist', size: 14, label: manage ? '退出批量选中' : '批量选中', cls: 'wsmgr-ibtn' + (manage ? ' on' : ''), onClick: () => { if (!wide) { setManage(!manage); if (!manage) expandSidebar(); } else { setManage(!manage); setConfirming(null); setMenuOpen(false) } } }),
+          wide ? React.createElement(TButton, { iconName: 'personal', size: 16, label: '视图选项', delay: 500, cls: 'wsmgr-ibtn' + (menuOpen ? ' on' : ''), onClick: () => setMenuOpen(!menuOpen) }) : null,
+          wide ? React.createElement(TButton, { iconName: 'projectAdd', size: 16, label: '添加工作区', delay: 500, cls: 'wsmgr-ibtn', onClick: addWorkspace }) : null,
+          wide ? React.createElement(TButton, { iconName: 'chevronDown', size: 14, label: '展开全部', delay: 500, cls: 'wsmgr-ibtn', onClick: expandAll }) : null,
+          wide ? React.createElement(TButton, { iconName: 'chevronUp', size: 14, label: '折叠全部', delay: 500, cls: 'wsmgr-ibtn', onClick: collapseAll }) : null,
+          React.createElement(TButton, { iconName: 'checklist', size: 14, label: manage ? '退出批量选中' : '批量选中', delay: 500, cls: 'wsmgr-ibtn' + (manage ? ' on' : ''), onClick: () => { if (!wide) { setManage(!manage); if (!manage) expandSidebar(); } else { setManage(!manage); setConfirming(null); setMenuOpen(false) } } }),
         ),
         menuOpen ? React.createElement('div', { className: 'wsmgr-menu', onClick: (e) => e.stopPropagation() },
           React.createElement('div', { className: 'wsmgr-menu-sec' },
