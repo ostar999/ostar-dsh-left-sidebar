@@ -512,12 +512,24 @@ const createdLabel = (createdAt) => {
     }
 
     const moveSession = (sessionId, targetWsId) => {
-      wsSvc().insertSessionBefore(targetWsId, sessionId).catch((e) => setErr(String(e && e.message ? e.message : e)))
+      fetch('/ostar-dsh-left-sidebar/migrate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sourceId: sessionId, targetWorkspaceId: targetWsId, mode: 'move' }),
+      })
+        .then((r) => r.json())
+        .then((res) => { if (res && !res.ok) setErr(String(res.error || '迁移失败')) })
+        .catch((e) => setErr(String(e && e.message ? e.message : e)))
     }
 
     const copySession = (sessionId, targetWsId) => {
-      sesSvc().fork({ sessionId: sessionId, increaseTitle: true })
-        .then((childId) => wsSvc().insertSessionBefore(targetWsId, childId))
+      fetch('/ostar-dsh-left-sidebar/migrate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sourceId: sessionId, targetWorkspaceId: targetWsId, mode: 'copy' }),
+      })
+        .then((r) => r.json())
+        .then((res) => { if (res && !res.ok) setErr(String(res.error || '复制失败')) })
         .catch((e) => setErr(String(e && e.message ? e.message : e)))
     }
 
