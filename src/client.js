@@ -517,8 +517,15 @@ const createdLabel = (createdAt) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sourceId: sessionId, targetWorkspaceId: targetWsId, mode: 'move' }),
       })
-        .then((r) => r.json())
-        .then((res) => { if (res && !res.ok) setErr(String(res.error || '迁移失败')) })
+        .then((r) => r.text())
+        .then((text) => {
+          let res = null
+          try { res = JSON.parse(text) } catch (e) {
+            setErr('迁移请求失败(响应: ' + (text ? text.slice(0, 120) : '空') + '),请确认已重启 DSH')
+            return
+          }
+          if (res && !res.ok) setErr(String(res.error || '迁移失败'))
+        })
         .catch((e) => setErr(String(e && e.message ? e.message : e)))
     }
 
@@ -528,8 +535,15 @@ const createdLabel = (createdAt) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sourceId: sessionId, targetWorkspaceId: targetWsId, mode: 'copy' }),
       })
-        .then((r) => r.json())
-        .then((res) => { if (res && !res.ok) setErr(String(res.error || '复制失败')) })
+        .then((r) => r.text())
+        .then((text) => {
+          let res = null
+          try { res = JSON.parse(text) } catch (e) {
+            setErr('复制请求失败(响应: ' + (text ? text.slice(0, 120) : '空') + '),请确认已重启 DSH')
+            return
+          }
+          if (res && !res.ok) setErr(String(res.error || '复制失败'))
+        })
         .catch((e) => setErr(String(e && e.message ? e.message : e)))
     }
 
