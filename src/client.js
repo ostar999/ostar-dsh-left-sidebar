@@ -96,6 +96,12 @@ const ICONS = {
   rightUp: { vb: '0 0 16 16', paths: [
     { d: 'M13.588429 5.147807C13.588429 4.739638 13.587271 4.403003 13.582013 4.118684L1.703098 15.99968L0.85155 15.148178L0 14.294485L11.878915 2.413442C11.594721 2.408199 11.257569 2.409154 10.849776 2.409154H2.400594V0.000001H10.849776C11.644471 0.000001 12.338899 -0.001059 12.901622 0.059909C13.486363 0.123352 14.071136 0.265493 14.598303 0.648292C14.886598 0.857751 15.141981 1.110984 15.351433 1.399281C15.734578 1.926807 15.876362 2.512925 15.939743 3.098105C16.000775 3.660718 15.99968 4.353347 15.99968 5.147807V13.599133H13.588429V5.147807Z' },
   ] },
+  star: { vb: '0 0 16 16', paths: [
+    { d: 'M8 1.6L9.884 5.818L14.5 6.258L11.05 9.426L12.06 13.974L8 11.728L3.94 13.974L4.95 9.426L1.5 6.258L6.116 5.818Z' },
+  ] },
+  starOutline: { vb: '0 0 16 16', paths: [
+    { stroke: true, d: 'M8 1.6L9.884 5.818L14.5 6.258L11.05 9.426L12.06 13.974L8 11.728L3.94 13.974L4.95 9.426L1.5 6.258L6.116 5.818Z' },
+  ] },
   copy: { vb: '0 0 16 16', paths: [
     { d: 'M6.14929 4.02032C7.11197 4.02032 7.87983 4.02016 8.49597 4.07598C9.12128 4.13269 9.65792 4.25188 10.1415 4.53106C10.7202 4.8653 11.2008 5.3459 11.535 5.92462C11.8142 6.40818 11.9334 6.94481 11.9901 7.57012C12.0459 8.18625 12.0458 8.95419 12.0458 9.9168C12.0458 10.8795 12.0459 11.6473 11.9901 12.2635C11.9334 12.8888 11.8142 13.4254 11.535 13.909C11.2008 14.4877 10.7202 14.9683 10.1415 15.3025C9.65792 15.5817 9.12128 15.7009 8.49597 15.7576C7.87984 15.8134 7.11196 15.8133 6.14929 15.8133C5.18667 15.8133 4.41874 15.8134 3.80261 15.7576C3.1773 15.7009 2.64067 15.5817 2.1571 15.3025C1.5784 14.9683 1.09778 14.4877 0.76355 13.909C0.484366 13.4254 0.365184 12.8888 0.308472 12.2635C0.252649 11.6473 0.252808 10.8795 0.252808 9.9168C0.252808 8.95418 0.252664 8.18625 0.308472 7.57012C0.365184 6.94481 0.484366 6.40818 0.76355 5.92462C1.09777 5.34589 1.57839 4.86529 2.1571 4.53106C2.64067 4.25188 3.1773 4.13269 3.80261 4.07598C4.41874 4.02017 5.18666 4.02032 6.14929 4.02032ZM6.14929 5.37774C5.16181 5.37774 4.46634 5.37761 3.92566 5.42657C3.39434 5.47472 3.07859 5.56574 2.83582 5.70587C2.4632 5.92106 2.15354 6.2307 1.93835 6.60333C1.79823 6.8461 1.70721 7.16185 1.65906 7.69317C1.6101 8.23385 1.61023 8.92933 1.61023 9.9168C1.61023 10.9043 1.61009 11.5998 1.65906 12.1404C1.70721 12.6717 1.79823 12.9875 1.93835 13.2303C2.15356 13.6029 2.46321 13.9126 2.83582 14.1277C3.07859 14.2679 3.39434 14.3589 3.92566 14.407C4.46634 14.456 5.16182 14.4559 6.14929 14.4559C7.13682 14.4559 7.83224 14.456 8.37292 14.407C8.90425 14.3589 9.21999 14.2679 9.46277 14.1277C9.83535 13.9126 10.145 13.6029 10.3602 13.2303C10.5004 12.9875 10.5914 12.6717 10.6395 12.1404C10.6885 11.5998 10.6884 10.9043 10.6884 9.9168C10.6884 8.92934 10.6885 8.23384 10.6395 7.69317C10.5914 7.16185 10.5004 6.8461 10.3602 6.60333C10.1451 6.23071 9.83536 5.92107 9.46277 5.70587C9.21999 5.56574 8.90424 5.47472 8.37292 5.42657C7.83224 5.3776 7.13682 5.37774 6.14929 5.37774ZM9.80164 0.367975C10.7638 0.367975 11.5314 0.36788 12.1473 0.423639C12.7726 0.480307 13.3093 0.598759 13.7928 0.877741C14.3717 1.21192 14.8521 1.69355 15.1864 2.27227C15.4655 2.75574 15.5857 3.29164 15.6425 3.9168C15.6983 4.53301 15.6971 5.3016 15.6971 6.26446V7.82989C15.6971 8.29264 15.6989 8.58993 15.6649 8.84844C15.4668 10.3525 14.401 11.5738 12.9833 11.9988V10.5467C13.6973 10.1903 14.2105 9.49662 14.3192 8.67169C14.3387 8.52347 14.3407 8.3358 14.3407 7.82989V6.26446C14.3407 5.27706 14.3398 4.58149 14.2909 4.04083C14.2428 3.50968 14.1526 3.19372 14.0126 2.95098C13.7974 2.57849 13.4876 2.26869 13.1151 2.05352C12.8724 1.91347 12.5564 1.82237 12.0253 1.77423C11.4847 1.72528 10.7888 1.7254 9.80164 1.7254H7.71472C6.7562 1.72558 5.92665 2.27697 5.52332 3.07891H4.07019C4.54221 1.51132 5.9932 0.368186 7.71472 0.367975H9.80164Z' },
   ] },
@@ -108,7 +114,7 @@ const icon = (name, size) => {
   const def = ICONS[name]
   if (!def) return null
   return React.createElement('svg', { width: size, height: size, viewBox: def.vb, fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
-    def.paths.map((p, i) => React.createElement('path', { key: i, d: p.d, fill: 'currentColor', opacity: p.opacity ? p.opacity : undefined, transform: p.t ? p.t : undefined, fillRule: p.fr ? p.fr : undefined, clipRule: p.cr ? p.cr : undefined })),
+    def.paths.map((p, i) => React.createElement('path', { key: i, d: p.d, fill: p.stroke ? 'none' : 'currentColor', stroke: p.stroke ? 'currentColor' : undefined, strokeWidth: p.stroke ? 1.4 : undefined, strokeLinejoin: p.stroke ? 'round' : undefined, opacity: p.opacity ? p.opacity : undefined, transform: p.t ? p.t : undefined, fillRule: p.fr ? p.fr : undefined, clipRule: p.cr ? p.cr : undefined })),
   )
 }
 
@@ -252,6 +258,21 @@ const createdLabel = (createdAt) => {
 .wsmgr-root.rail .wsmgr-ibtn{width:36px;height:36px}
 .wsmgr-root.rail .wsmgr-header{justify-content:flex-start;gap:0;margin-bottom:12px;padding-left:0}
 .wsmgr-root.rail .wsmgr-list{display:none}
+.wsmgr-groups{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:2px 8px 8px}
+.wsmgr-gtag{display:inline-flex;align-items:center;gap:3px;max-width:120px;padding:1px 9px;border-radius:999px;border:1px solid transparent;background:transparent;cursor:pointer;font-size:12px;line-height:20px;color:var(--dsw-alias-label-secondary,#9a9a9a);white-space:nowrap;user-select:none;box-sizing:border-box}
+.wsmgr-gtag:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.09));color:var(--dsw-alias-label-primary,#e8e8e8)}
+.wsmgr-gtag.on{color:var(--dsw-alias-brand-primary,#4f7cff);border-color:color-mix(in srgb,var(--dsw-alias-brand-primary,#4f7cff) 40%,transparent);background:color-mix(in srgb,var(--dsw-alias-brand-primary,#4f7cff) 10%,transparent)}
+.wsmgr-gt{overflow:hidden;text-overflow:ellipsis}
+.wsmgr-gtag-x{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;font-size:11px;line-height:1;opacity:.6;flex:none}
+.wsmgr-gtag-x:hover{opacity:1;background:rgba(128,128,128,.2)}
+.wsmgr-gadd{font-size:15px;padding:0 7px}
+.wsmgr-ginput{height:22px;padding:0 8px;border-radius:8px;border:1px solid var(--dsw-alias-brand-primary,#4f7cff);outline:none;font-size:12px;color:var(--dsw-alias-label-primary,#e8e8e8);background:var(--dsw-alias-input-bg,rgba(128,128,128,.12));box-sizing:border-box}
+.wsmgr-gchk{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:4px;border:1px solid rgba(128,128,128,.45);color:#fff;flex:none}
+.wsmgr-gchk.on{background:var(--dsw-alias-brand-primary,#4f7cff);border-color:var(--dsw-alias-brand-primary,#4f7cff)}
+.wsmgr-gchk svg{width:10px;height:10px}
+.wsmgr-starOn{color:#f5c542}
+.wsmgr-grouppick{max-height:300px;overflow-y:auto}
+.wsmgr-gpicknew{padding:4px 7px}
 `
   styles.insert(CSS)
 
@@ -339,11 +360,30 @@ const createdLabel = (createdAt) => {
     const [pickTarget, setPickTarget] = React.useState(null)
     const [drag, setDrag] = React.useState(null)
     const [dropOver, setDropOver] = React.useState(null)
+    const [groupsData, setGroupsData] = React.useState(null)
+    const [activeGroup, setActiveGroup] = React.useState('__all__')
+    const [groupPick, setGroupPick] = React.useState(null)
+    const [newGroupOpen, setNewGroupOpen] = React.useState(false)
+    const [newGroupName, setNewGroupName] = React.useState('')
+    const [gpNew, setGpNew] = React.useState(false)
     const pickAnchor = React.useState({ current: null })[0]
     const now = Date.now()
 
     const wsSvc = () => ctx.get('workspaces')
     const sesSvc = () => ctx.get('sessions')
+
+    React.useEffect(() => {
+      let alive = true
+      fetch('/ostar-dsh-left-sidebar/groups')
+        .then((r) => r.json())
+        .then((res) => {
+          if (alive && res && res.ok) {
+            setGroupsData({ favorites: Array.isArray(res.favorites) ? res.favorites : [], groups: Array.isArray(res.groups) ? res.groups : [] })
+          }
+        })
+        .catch(() => {})
+      return () => { alive = false }
+    }, [])
 
     React.useEffect(() => {
       setExpanded((prev) => {
@@ -374,9 +414,22 @@ const createdLabel = (createdAt) => {
     const archivedSet = new Set(archived)
     const visible = (s) => s.origin !== 'subagent' && !archivedSet.has(s.id) && (!s.blank || s.id === current)
 
+    // 分组视图过滤:仅展示当前标签(全部/收藏/自定义分组)下命中的工作区。
+    const visibleWorkspaces = (() => {
+      if (!groupsData || activeGroup === '__all__') return workspaces
+      if (activeGroup === '__fav__') {
+        const fav = new Set(groupsData.favorites)
+        return workspaces.filter((w) => fav.has(w.workspaceId))
+      }
+      const grp = groupsData.groups.find((g) => g.id === activeGroup)
+      if (!grp) return workspaces
+      const set = new Set(grp.workspaceIds)
+      return workspaces.filter((w) => set.has(w.workspaceId))
+    })()
+
     const groups = []
     const accounted = new Set()
-    for (const w of workspaces) {
+    for (const w of visibleWorkspaces) {
       const members = []
       for (const id of w.sessionIds) {
         const s = byId[id]
@@ -393,7 +446,7 @@ const createdLabel = (createdAt) => {
       const s = byId[id]
       if (s !== undefined && !accounted.has(id) && visible(s)) stray.push(s)
     }
-    if (stray.length > 0) {
+    if (stray.length > 0 && activeGroup === '__all__') {
       if (orderBy === 'updated') stray.sort(byRecency)
       groups.push({ key: '', label: '未分组', path: null, count: stray.length, members: stray })
     }
@@ -527,6 +580,45 @@ const createdLabel = (createdAt) => {
       } catch (e) { /* 忽略 */ }
     }
 
+    const saveGroups = (next) => {
+      setGroupsData(next)
+      fetch('/ostar-dsh-left-sidebar/groups', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(next),
+      }).catch(() => { /* host 未就绪时仅保留本页状态 */ })
+    }
+
+    const toggleFavorite = (workspaceId) => {
+      if (!groupsData) return
+      const has = groupsData.favorites.includes(workspaceId)
+      saveGroups({ ...groupsData, favorites: has ? groupsData.favorites.filter((x) => x !== workspaceId) : groupsData.favorites.concat([workspaceId]) })
+    }
+
+    const toggleGroupFor = (workspaceId, groupId) => {
+      if (!groupsData) return
+      saveGroups({ ...groupsData, groups: groupsData.groups.map((g) => {
+        if (g.id !== groupId) return g
+        const has = g.workspaceIds.includes(workspaceId)
+        return { ...g, workspaceIds: has ? g.workspaceIds.filter((x) => x !== workspaceId) : g.workspaceIds.concat([workspaceId]) }
+      }) })
+    }
+
+    const createGroup = (name, workspaceId) => {
+      if (!groupsData) return null
+      const n = name.trim()
+      if (!n) return null
+      const gid = 'g' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 6)
+      saveGroups({ ...groupsData, groups: groupsData.groups.concat([{ id: gid, name: n, workspaceIds: workspaceId ? [workspaceId] : [] }]) })
+      return gid
+    }
+
+    const deleteGroup = (groupId) => {
+      if (!groupsData) return
+      saveGroups({ ...groupsData, groups: groupsData.groups.filter((g) => g.id !== groupId) })
+      setActiveGroup((prev) => prev === groupId ? '__all__' : prev)
+    }
+
     const moveSession = (sessionId, targetWsId) => {
       fetch('/ostar-dsh-left-sidebar/migrate', {
         method: 'POST',
@@ -575,6 +667,7 @@ const createdLabel = (createdAt) => {
     ]
     const workspaceMenuItems = [
       { id: 'rename', label: '重命名', icon: 'edit' },
+      ...(groupsData ? [{ id: 'group', label: '加入分组…', icon: 'folderOpen' }] : []),
       { id: 'delete', label: '删除工作区', icon: 'trash', danger: true },
     ]
 
@@ -614,6 +707,10 @@ const createdLabel = (createdAt) => {
               else if (item.id === 'move' || item.id === 'copy') {
                 pickAnchor.current = rowMenu.rect
                 setPickTarget({ kind: item.id, sessionId: rowMenu.id, title: rowMenu.title })
+              }
+              else if (item.id === 'group') {
+                pickAnchor.current = rowMenu.rect
+                setGroupPick({ workspaceId: rowMenu.id, workspaceTitle: rowMenu.title })
               }
             },
           }, icon(item.icon, 16), React.createElement('span', null, item.label))),
@@ -720,6 +817,7 @@ const createdLabel = (createdAt) => {
                 React.createElement('span', { className: 'wsmgr-title' }, g.label),
               ),
           React.createElement('span', { className: 'wsmgr-rowActions' },
+            isReal && groupsData ? React.createElement(TButton, { iconName: groupsData.favorites.includes(g.key) ? 'star' : 'starOutline', size: 16, label: groupsData.favorites.includes(g.key) ? '取消收藏' : '收藏', noTip: true, cls: 'wsmgr-iconBtn' + (groupsData.favorites.includes(g.key) ? ' wsmgr-starOn' : ''), onClick: (e) => { e.stopPropagation(); toggleFavorite(g.key) } }) : null,
             isReal ? React.createElement(TButton, { iconName: 'ellipsis', size: 16, label: '工作区操作', noTip: true, cls: 'wsmgr-iconBtn', onClick: openRowMenu('ws', g.key, g.label, workspaceMenuItems) }) : null,
             React.createElement(TButton, { iconName: 'plus', size: 16, label: '新建会话', noTip: true, cls: 'wsmgr-iconBtn', onClick: (e) => { e.stopPropagation(); if (isReal) startSession(g.key) } }),
             manage && isReal ? React.createElement('button', { type: 'button', className: 'wsmgr-del', title: '删除此工作区', onClick: (e) => { e.stopPropagation(); setConfirming({ wsIds: [g.key], sesIds: [] }) }, disabled: busy }, '删除') : null,
@@ -813,6 +911,49 @@ const createdLabel = (createdAt) => {
       )
     }
 
+    let groupPickEl = null
+    if (groupPick && groupsData) {
+      const iw = typeof window !== 'undefined' ? window.innerWidth : 1200
+      const ih = typeof window !== 'undefined' ? window.innerHeight : 800
+      const anchorRect = pickAnchor.current
+      let left = (anchorRect ? anchorRect.right : iw / 2) - 218 + 4
+      if (left < 8) left = 8
+      let top = (anchorRect ? anchorRect.bottom : 80) + 4
+      if (top + 280 > ih - 8) top = Math.max(8, (anchorRect ? anchorRect.top : 80) - 280)
+      groupPickEl = React.createElement('div', null,
+        React.createElement('div', { className: 'wsmgr-menu-mask', onClick: () => setGroupPick(null) }),
+        React.createElement('div', { className: 'wsmgr-rowmenu wsmgr-grouppick', style: { left: left, top: top } },
+          React.createElement('div', { className: 'wsmgr-rowmenu-label' }, '加入分组:' + groupPick.workspaceTitle),
+          groupsData.groups.length === 0
+            ? React.createElement('div', { className: 'wsmgr-rowmenu-empty' }, '还没有分组')
+            : groupsData.groups.map((g) => {
+                const inGroup = g.workspaceIds.includes(groupPick.workspaceId)
+                return React.createElement('div', {
+                  key: g.id,
+                  className: 'wsmgr-rowmenu-item' + (inGroup ? ' on' : ''),
+                  onClick: () => toggleGroupFor(groupPick.workspaceId, g.id),
+                },
+                  React.createElement('span', { className: 'wsmgr-gchk' + (inGroup ? ' on' : '') }, inGroup ? '✓' : null),
+                  React.createElement('span', { style: { flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' } }, g.name),
+                  React.createElement('span', { className: 'wsmgr-gtag-x', title: '删除分组', onClick: (e) => { e.stopPropagation(); deleteGroup(g.id) } }, '×'),
+                )
+              }),
+          gpNew
+            ? React.createElement('div', { className: 'wsmgr-gpicknew' },
+                React.createElement('input', { className: 'wsmgr-ginput', style: { width: '100%' }, value: newGroupName, autoFocus: true, placeholder: '输入分组名称,回车创建', onChange: (e) => setNewGroupName(e.target.value), onKeyDown: (e) => {
+                  if (e.key === 'Enter') {
+                    if (createGroup(newGroupName, groupPick.workspaceId)) { setGpNew(false); setNewGroupName('') }
+                  } else if (e.key === 'Escape') {
+                    setGpNew(false); setNewGroupName('')
+                  }
+                } }),
+              )
+            : React.createElement('div', { className: 'wsmgr-rowmenu-item', onClick: () => { setGpNew(true); setNewGroupName('') } },
+                icon('plus', 16), React.createElement('span', null, '新建分组…')),
+        ),
+      )
+    }
+
     return React.createElement('div', { className: 'wsmgr-root' + (wide ? '' : ' rail') },
       React.createElement('div', { className: 'wsmgr-header' },
         wide ? React.createElement('span', { className: 'wsmgr-hlabel', style: searchOpen ? { opacity: 0, visibility: 'hidden', maxWidth: 0, marginRight: -4 } : {} }, groupBy === 'flat' ? '会话' : '工作区') : null,
@@ -843,6 +984,20 @@ const createdLabel = (createdAt) => {
           ),
         ) : null,
       ),
+      wide && groupsData ? React.createElement('div', { className: 'wsmgr-groups' },
+        React.createElement('button', { type: 'button', className: 'wsmgr-gtag' + (activeGroup === '__all__' ? ' on' : ''), onClick: () => setActiveGroup('__all__') }, '全部'),
+        React.createElement('button', { type: 'button', className: 'wsmgr-gtag' + (activeGroup === '__fav__' ? ' on' : ''), onClick: () => setActiveGroup('__fav__') }, '收藏'),
+        groupsData.groups.map((g) => React.createElement('button', { type: 'button', key: g.id, className: 'wsmgr-gtag' + (activeGroup === g.id ? ' on' : ''), onClick: () => setActiveGroup(g.id), title: '分组:' + g.name },
+          React.createElement('span', { className: 'wsmgr-gt' }, g.name),
+          React.createElement('span', { className: 'wsmgr-gtag-x', title: '删除分组', onClick: (e) => { e.stopPropagation(); deleteGroup(g.id) } }, '×'),
+        )),
+        newGroupOpen
+          ? React.createElement('input', { className: 'wsmgr-ginput', value: newGroupName, autoFocus: true, placeholder: '分组名称', onChange: (e) => setNewGroupName(e.target.value), onKeyDown: (e) => {
+              if (e.key === 'Enter') { if (createGroup(newGroupName)) { setNewGroupOpen(false); setNewGroupName('') } }
+              else if (e.key === 'Escape') { setNewGroupOpen(false); setNewGroupName('') }
+            } })
+          : React.createElement('button', { type: 'button', className: 'wsmgr-gtag wsmgr-gadd', title: '新建分组', onClick: () => setNewGroupOpen(true) }, '+'),
+      ) : null,
       confirming ? React.createElement('div', { className: 'wsmgr-confirm' },
         React.createElement('span', null, '确认删除 ' + confirming.wsIds.length + ' 个工作区' + (withSessions && confirming.wsIds.length > 0 ? '(连同其会话)' : '') + (confirming.sesIds.length > 0 ? (confirming.wsIds.length > 0 ? '、' : '') + confirming.sesIds.length + ' 个会话' : '') + '?'),
         React.createElement('span', { className: 'wsmgr-tspr' }),
@@ -864,6 +1019,7 @@ const createdLabel = (createdAt) => {
       React.createElement('div', { className: 'wsmgr-list' }, listBody),
       rowMenuEl,
       pickEl,
+      groupPickEl,
       hcEl,
     )
   }

@@ -13,7 +13,17 @@
  *
  * 与官方 fork 一致：仅复制到最后一个完成的 turn（进行中的 turn 无法复制）；
  * 副本继承源会话的 agentPreset，标题来自日志内的 title 事件。
+ *
+ * 工作区分组 / 收藏（dev 分支新增）：
+ * `GET/POST /ostar-dsh-left-sidebar/groups` 读写分组数据
+ * （收藏列表 + 自定义分组列表），持久化到
+ * `~/.dsh/ostar-dsh-left-sidebar/groups.json`，跨刷新/重启保留。
+ * 数据仅用于侧边栏展示层过滤，不改动官方工作区/会话账目。
  */
+
+import { homedir } from 'node:os'
+import { join } from 'node:path'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 
 export const name = 'ostar-dsh-left-sidebar'
 
@@ -114,4 +124,62 @@ export function apply(ctx) {
       }
     },
   }), 'ostar-dsh-left-sidebar: migrate route')
+
+  // ---- 工作区分组 / 收藏 持久化（GET / POST）----
+  const GROUPS_DIR = join(homedir(), '.dsh', 'ostar-dsh-left-sidebar')
+  const GROUPS_FILE = join(GROUPS_DIR, 'groups.json')
+
+  async function readGroups() {
+    try {
+      const raw = await readFile(GROUPS_FILE, 'utf8')
+      const data = JSON.parse(raw)
+      if (data && Array.isArray(data.favorites) && Array.isArray(data.groups)) {
+        return {
+          favorites: data.favorites.filter((x) => typeof x === 'string'),
+          groups: data.groups,
+        }
+      }
+    } catch {
+      /* 文件不存在或损坏 → 返回默认值 */
+    }
+    return { favorites: [], groups: [] }
+  }
+
+  ctx.effect(() => webServer.register({
+    kind: 'exact',
+    path: '/ostar-dsh-left-sidebar/groups',
+    handler: async (req, res) => {
+      if (req.method === 'GET') {
+        const data = await readGroups()
+        json(res, 200, { ok: true, favorites: data.favorites, groups: data.groups })
+        return
+      }
+      if (req.method === 'POST') {
+        let args = {}
+        try {
+          args = JSON.parse((await readBody(req)) || '{}')
+        } catch {
+          json(res, 400, { ok: false, error: 'bad-json' })
+          return
+        }
+        if (args === null || typeof args !== 'object' || !Array.isArray(args.favorites) || !Array.isArray(args.groups)) {
+          json(res, 400, { ok: false, error: 'bad-args' })
+          return
+        }
+        const favorites = args.favorites.filter((x) => typeof x === 'string')
+        const groups = args.groups
+          .filter((g) => g !== null && typeof g === 'object' && typeof g.id === 'string' && typeof g.name === 'string' && Array.isArray(g.workspaceIds))
+          .map((g) => ({ id: g.id, name: g.name, workspaceIds: g.workspaceIds.filter((x) => typeof x === 'string') }))
+        try {
+          await mkdir(GROUPS_DIR, { recursive: true })
+          await writeFile(GROUPS_FILE, JSON.stringify({ favorites, groups }, null, 2), 'utf8')
+          json(res, 200, { ok: true })
+        } catch (reason) {
+          json(res, 500, { ok: false, error: String(reason && reason.message ? reason.message : reason) })
+        }
+        return
+      }
+      json(res, 405, { ok: false, error: 'method-not-allowed' })
+    },
+  }), 'ostar-dsh-left-sidebar: groups route')
 }
