@@ -276,7 +276,8 @@ const createdLabel = (createdAt) => {
 .wsmgr-starOn{color:#f5c542}
 .wsmgr-grouppick{max-height:300px;overflow-y:auto}
 .wsmgr-gpicknew{padding:4px 7px}
-.wsmgr-gmgr-btn{margin-left:auto}
+.wsmgr-gmgr-btn{width:30px;height:30px;flex:none;display:inline-flex;align-items:center;justify-content:center;margin-right:2px}
+.wsmgr-gmgr-btn svg{width:18px;height:18px}
 .wsmgr-gmgr-btn.on{color:var(--dsw-alias-brand-primary,#4f7cff)}
 .wsmgr-gmgr-row{position:relative}
 .wsmgr-gmgr-count{margin-left:auto;padding-right:6px;font-size:11px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8a8a8a);flex:none}
@@ -1076,20 +1077,9 @@ const createdLabel = (createdAt) => {
         ) : null,
       ),
       wide && groupsData ? React.createElement('div', { className: 'wsmgr-groups' },
-        React.createElement('button', { type: 'button', className: 'wsmgr-gtag' + (activeGroup === '__all__' ? ' on' : ''), onClick: () => changeGroup('__all__') }, '全部'),
-        React.createElement('button', { type: 'button', className: 'wsmgr-gtag' + (activeGroup === '__fav__' ? ' on' : ''), onClick: () => changeGroup('__fav__') }, '收藏'),
-        groupsData.groups.map((g) => React.createElement('button', { type: 'button', key: g.id, className: 'wsmgr-gtag' + (activeGroup === g.id ? ' on' : ''), onClick: () => changeGroup(g.id), title: '分组:' + g.name },
-          React.createElement('span', { className: 'wsmgr-gt' }, g.name),
-        )),
-        newGroupOpen
-          ? React.createElement('input', { className: 'wsmgr-ginput', value: newGroupName, autoFocus: true, placeholder: '分组名称', onChange: (e) => setNewGroupName(e.target.value), onKeyDown: (e) => {
-              if (e.key === 'Enter') { if (createGroup(newGroupName)) { setNewGroupOpen(false); setNewGroupName('') } }
-              else if (e.key === 'Escape') { setNewGroupOpen(false); setNewGroupName('') }
-            } })
-          : React.createElement('button', { type: 'button', className: 'wsmgr-gtag wsmgr-gadd', title: '新建分组', onClick: () => setNewGroupOpen(true) }, '+'),
         React.createElement(TButton, {
           iconName: 'gear',
-          size: 14,
+          size: 18,
           label: '分组管理',
           delay: 500,
           cls: 'wsmgr-ibtn wsmgr-gmgr-btn' + (groupMgr ? ' on' : ''),
@@ -1101,6 +1091,17 @@ const createdLabel = (createdAt) => {
             setGroupPick(null)
           },
         }),
+        React.createElement('button', { type: 'button', className: 'wsmgr-gtag' + (activeGroup === '__all__' ? ' on' : ''), onClick: () => changeGroup('__all__') }, '全部'),
+        React.createElement('button', { type: 'button', className: 'wsmgr-gtag' + (activeGroup === '__fav__' ? ' on' : ''), onClick: () => changeGroup('__fav__') }, '收藏'),
+        groupsData.groups.map((g) => React.createElement('button', { type: 'button', key: g.id, className: 'wsmgr-gtag' + (activeGroup === g.id ? ' on' : ''), onClick: () => changeGroup(g.id), title: '分组:' + g.name },
+          React.createElement('span', { className: 'wsmgr-gt' }, g.name),
+        )),
+        newGroupOpen
+          ? React.createElement('input', { className: 'wsmgr-ginput', value: newGroupName, autoFocus: true, placeholder: '分组名称', onChange: (e) => setNewGroupName(e.target.value), onKeyDown: (e) => {
+              if (e.key === 'Enter') { if (createGroup(newGroupName)) { setNewGroupOpen(false); setNewGroupName('') } }
+              else if (e.key === 'Escape') { setNewGroupOpen(false); setNewGroupName('') }
+            } })
+          : React.createElement('button', { type: 'button', className: 'wsmgr-gtag wsmgr-gadd', title: '新建分组', onClick: () => setNewGroupOpen(true) }, '+'),
       ) : null,
       confirming ? React.createElement('div', { className: 'wsmgr-confirm' },
         React.createElement('span', null, '确认删除 ' + confirming.wsIds.length + ' 个工作区' + (withSessions && confirming.wsIds.length > 0 ? '(连同其会话)' : '') + (confirming.sesIds.length > 0 ? (confirming.wsIds.length > 0 ? '、' : '') + confirming.sesIds.length + ' 个会话' : '') + '?'),
