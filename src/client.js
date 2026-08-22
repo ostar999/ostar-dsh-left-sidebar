@@ -261,7 +261,7 @@ const createdLabel = (createdAt) => {
 .wsmgr-root.rail .wsmgr-ibtn{width:36px;height:36px}
 .wsmgr-root.rail .wsmgr-header{justify-content:flex-start;gap:0;margin-bottom:12px;padding-left:0}
 .wsmgr-root.rail .wsmgr-list{display:none}
-.wsmgr-groups{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:2px 8px 8px}
+.wsmgr-groups{display:flex;align-items:center;gap:4px;flex-wrap:wrap;padding:2px 8px 8px 4px}
 .wsmgr-gtag{display:inline-flex;align-items:center;gap:3px;max-width:120px;padding:1px 9px;border-radius:999px;border:1px solid transparent;background:transparent;cursor:pointer;font-size:12px;line-height:20px;color:var(--dsw-alias-label-secondary,#9a9a9a);white-space:nowrap;user-select:none;box-sizing:border-box}
 .wsmgr-gtag:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.09));color:var(--dsw-alias-label-primary,#e8e8e8)}
 .wsmgr-gtag.on{color:var(--dsw-alias-brand-primary,#4f7cff);border-color:color-mix(in srgb,var(--dsw-alias-brand-primary,#4f7cff) 40%,transparent);background:color-mix(in srgb,var(--dsw-alias-brand-primary,#4f7cff) 10%,transparent)}
@@ -276,7 +276,7 @@ const createdLabel = (createdAt) => {
 .wsmgr-starOn{color:#f5c542}
 .wsmgr-grouppick{max-height:300px;overflow-y:auto}
 .wsmgr-gpicknew{padding:4px 7px}
-.wsmgr-gmgr-btn{width:26px;height:26px;flex:none;display:inline-flex;align-items:center;justify-content:center;margin-right:2px}
+.wsmgr-gmgr-btn{width:26px;height:26px;flex:none;display:inline-flex;align-items:center;justify-content:center}
 .wsmgr-gmgr-btn svg{width:17px;height:17px}
 .wsmgr-gmgr-btn.on{color:var(--dsw-alias-brand-primary,#4f7cff)}
 .wsmgr-gmgr-row{position:relative}
