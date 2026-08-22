@@ -208,6 +208,9 @@ const createdLabel = (createdAt) => {
 .wsmgr-title{text-overflow:ellipsis;white-space:nowrap;min-width:0;font-size:14px;line-height:20px;overflow:hidden}
 .wsmgr-renameInput{border:1px solid var(--dsw-alias-border-l2,rgba(128,128,128,.5));background:var(--dsw-alias-bg-layer-1,#2a2a2e);min-width:0;color:inherit;border-radius:4px;outline:none;padding:0 2px;font-size:14px;line-height:20px;flex:1}
 .wsmgr-sessionRow{cursor:pointer;user-select:none;color:var(--dsw-alias-label-primary,#e8e8e8);border-radius:8px;align-items:center;gap:0;padding:0 8px;display:flex;box-sizing:border-box;height:32px;position:relative;animation:wsmgr-in .15s}
+.wsmgr-projectRow.dropBefore:before,.wsmgr-projectRow.dropAfter:after,.wsmgr-sessionRow.dropBefore:before,.wsmgr-sessionRow.dropAfter:after{content:"";z-index:1;background:linear-gradient(55deg, transparent calc(50% - 1px), var(--dsw-alias-state-business-primary,#3b82f6) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) 0 0 / 5px 7px no-repeat, linear-gradient(125deg, transparent calc(50% - 1px), var(--dsw-alias-state-business-primary,#3b82f6) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)) 0 5px / 5px 7px no-repeat, linear-gradient(var(--dsw-alias-state-business-primary,#3b82f6) 0 0) 4px 5px / calc(100% - 4px) 2px no-repeat;pointer-events:none;height:12px;position:absolute;left:0;right:4px}
+.wsmgr-projectRow.dropBefore:before,.wsmgr-sessionRow.dropBefore:before{top:-7px}
+.wsmgr-projectRow.dropAfter:after,.wsmgr-sessionRow.dropAfter:after{bottom:-7px}
 @keyframes wsmgr-in{0%{opacity:0}}
 .wsmgr-sessionRow:hover,.wsmgr-sessionRow.selected,.wsmgr-sessionRow.menuOpen{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
 .wsmgr-sessionRow .wsmgr-title{margin:0 6px 0 4px;flex:1}
@@ -334,6 +337,8 @@ const createdLabel = (createdAt) => {
     const [renaming, setRenaming] = React.useState(null)
     const [hc, setHc] = React.useState(null)
     const [pickTarget, setPickTarget] = React.useState(null)
+    const [drag, setDrag] = React.useState(null)
+    const [dropOver, setDropOver] = React.useState(null)
     const pickAnchor = React.useState({ current: null })[0]
     const now = Date.now()
 
@@ -616,13 +621,57 @@ const createdLabel = (createdAt) => {
       )
     }
 
-    const sessionRow = (m) => {
+    const rowHalf = (e) => {
+      const rect = e.currentTarget.getBoundingClientRect()
+      return e.clientY < rect.top + rect.height / 2 ? 'before' : 'after'
+    }
+
+    const clearDrag = () => { setDrag(null); setDropOver(null) }
+
+    const commitWorkspaceDrag = (activeDrag, over) => {
+      const rowIndex = workspaces.findIndex((w) => w.workspaceId === over.id)
+      if (rowIndex === -1) return
+      const anchor = over.half === 'before' ? over.id : (workspaces[rowIndex + 1] ? workspaces[rowIndex + 1].workspaceId : undefined)
+      if (anchor === activeDrag.id) return
+      const sourceIndex = workspaces.findIndex((w) => w.workspaceId === activeDrag.id)
+      const anchorIndex = anchor === undefined ? workspaces.length : workspaces.findIndex((w) => w.workspaceId === anchor)
+      if (sourceIndex !== -1 && (anchorIndex === sourceIndex || anchorIndex === sourceIndex + 1)) return
+      clearDrag()
+      const svc = wsSvc()
+      if (!svc || typeof svc.insertBefore !== 'function') { setErr('工作区排序暂不可用'); return }
+      svc.insertBefore(activeDrag.id, anchor).catch((e) => setErr(String(e && e.message ? e.message : e)))
+    }
+
+    const commitSessionDrag = (activeDrag, over) => {
+      const group = groups.find((candidate) => candidate.key === activeDrag.workspaceId)
+      if (group === undefined) return
+      const targetIndex = group.members.findIndex((s) => s.id === over.id)
+      if (targetIndex === -1) return
+      const anchor = over.half === 'before' ? over.id : (group.members[targetIndex + 1] ? group.members[targetIndex + 1].id : undefined)
+      if (anchor === activeDrag.id) return
+      const sourceIndex = group.members.findIndex((s) => s.id === activeDrag.id)
+      const anchorIndex = anchor === undefined ? group.members.length : group.members.findIndex((s) => s.id === anchor)
+      if (sourceIndex !== -1 && (anchorIndex === sourceIndex || anchorIndex === sourceIndex + 1)) return
+      clearDrag()
+      if (orderBy === 'updated') return
+      wsSvc().insertSessionBefore(activeDrag.workspaceId, activeDrag.id, anchor).catch((e) => setErr(String(e && e.message ? e.message : e)))
+    }
+
+    const sessionRow = (m, wsKey) => {
       const isRenaming = renaming && renaming.kind === 'ses' && renaming.id === m.id
       const st = statusList(m)[0]
+      const droppable = drag !== null && drag.kind === 'ses' && drag.id !== m.id && drag.workspaceId === wsKey
+      const dropMarker = dropOver !== null && dropOver.kind === 'ses' && dropOver.id === m.id ? dropOver.half : null
+      const draggable = !m.blank && wsKey !== undefined && wsKey !== '' && orderBy !== 'updated'
       return React.createElement('div', {
         key: m.id,
-        className: 'wsmgr-sessionRow' + (m.id === current ? ' selected' : '') + (rowMenu && rowMenu.id === m.id ? ' menuOpen' : ''),
+        className: 'wsmgr-sessionRow' + (m.id === current ? ' selected' : '') + (rowMenu && rowMenu.id === m.id ? ' menuOpen' : '') + (dropMarker === 'before' ? ' dropBefore' : '') + (dropMarker === 'after' ? ' dropAfter' : ''),
         onClick: () => open(m.id),
+        draggable: draggable,
+        onDragStart: (e) => { if (!draggable) return; setHc(null); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', m.id); setDrag({ kind: 'ses', id: m.id, workspaceId: wsKey }) },
+        onDragEnd: clearDrag,
+        onDragOver: (e) => { if (!droppable) return; e.preventDefault(); e.dataTransfer.dropEffect = 'move'; setDropOver({ kind: 'ses', id: m.id, half: rowHalf(e) }) },
+        onDrop: (e) => { if (!drag || drag.kind !== 'ses' || drag.id === m.id) return; e.preventDefault(); commitSessionDrag(drag, dropOver && dropOver.id === m.id ? dropOver : { id: m.id, half: rowHalf(e) }) },
         onMouseEnter: (e) => { if (rowMenu && rowMenu.id === m.id) return; const r = e.currentTarget.getBoundingClientRect(); setHc({ kind: 'ses', id: m.id, rect: { top: r.top, right: r.right } }) },
         onMouseLeave: () => setHc((prev) => prev && prev.id === m.id && prev.kind === 'ses' ? null : prev),
       },
@@ -644,10 +693,17 @@ const createdLabel = (createdAt) => {
       const containsCurrent = g.key !== '' && g.members.some((m) => m.id === current)
       const isRenaming = renaming && renaming.kind === 'ws' && renaming.id === g.key
       const isReal = g.key !== ''
+      const droppable = isReal && drag !== null && drag.kind === 'ws' && drag.id !== g.key
+      const dropMarker = dropOver !== null && dropOver.kind === 'ws' && dropOver.id === g.key ? dropOver.half : null
       return React.createElement('div', { key: g.key },
         React.createElement('div', {
-          className: 'wsmgr-projectRow' + (rowMenu && rowMenu.id === g.key ? ' menuOpen' : ''),
+          className: 'wsmgr-projectRow' + (rowMenu && rowMenu.id === g.key ? ' menuOpen' : '') + (dropMarker === 'before' ? ' dropBefore' : '') + (dropMarker === 'after' ? ' dropAfter' : ''),
           onClick: () => toggleGroup(g.key),
+          draggable: isReal,
+          onDragStart: (e) => { if (!isReal) return; setHc(null); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', g.key); setDrag({ kind: 'ws', id: g.key }) },
+          onDragEnd: clearDrag,
+          onDragOver: (e) => { if (!droppable) return; e.preventDefault(); e.dataTransfer.dropEffect = 'move'; setDropOver({ kind: 'ws', id: g.key, half: rowHalf(e) }) },
+          onDrop: (e) => { if (!drag || drag.kind !== 'ws' || drag.id === g.key) return; e.preventDefault(); commitWorkspaceDrag(drag, dropOver && dropOver.id === g.key ? dropOver : { id: g.key, half: rowHalf(e) }) },
           onMouseEnter: (e) => { if (rowMenu && rowMenu.id === g.key) return; const r = e.currentTarget.getBoundingClientRect(); setHc({ kind: 'ws', id: g.key, rect: { top: r.top, right: r.right } }) },
           onMouseLeave: () => setHc((prev) => prev && prev.id === g.key && prev.kind === 'ws' ? null : prev),
         },
@@ -669,12 +725,12 @@ const createdLabel = (createdAt) => {
             manage && isReal ? React.createElement('button', { type: 'button', className: 'wsmgr-del', title: '删除此工作区', onClick: (e) => { e.stopPropagation(); setConfirming({ wsIds: [g.key], sesIds: [] }) }, disabled: busy }, '删除') : null,
           ),
         ),
-        isExpanded ? g.members.map(sessionRow) : null,
+        isExpanded ? g.members.map((m) => sessionRow(m, g.key)) : null,
       )
     }
 
     const groupBlocks = groups.map(projectRow)
-    const flatBlocks = flatRows.map((m) => sessionRow(m))
+    const flatBlocks = flatRows.map((m) => sessionRow(m, undefined))
 
     const searchRows = []
     for (const s of localHits) {
