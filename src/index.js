@@ -19,11 +19,21 @@
  * （收藏列表 + 自定义分组列表），持久化到
  * `~/.dsh/ostar-dsh-left-sidebar/groups.json`，跨刷新/重启保留。
  * 数据仅用于侧边栏展示层过滤，不改动官方工作区/会话账目。
+ *
+ * 彻底删除（本地数据清理）：
+ * 官方「删除会话」= 归档（`archivedSessionIds`，日志保留），「删除工作区」=
+ * 注册移除 —— 会话日志目录 `~/.dsh/sessions/<cwd编码>/<sessionId>/` 与投影
+ * 缓存 `~/.dsh/storages/session_projcache/sessions/<sessionId>.json` 都会留在
+ * 磁盘上，DSH 重建索引 / 重装后会依据这些残留重新登记工作区与会话（“复活”）。
+ * `POST /ostar-dsh-left-sidebar/purge` 在官方删除之后清理这些残留：
+ *   1. 删除会话日志目录（不可恢复）；
+ *   2. 删除投影缓存分片；
+ *   3. 从 `~/.dsh/storages/workspace.json` 摘除已删工作区与悬挂的会话引用。
  */
 
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, rename, readdir, rm, stat, writeFile } from 'node:fs/promises'
 
 export const name = 'ostar-dsh-left-sidebar'
 
@@ -31,6 +41,12 @@ export const name = 'ostar-dsh-left-sidebar'
 export const inject = ['webServer']
 
 const ROUTE = '/ostar-dsh-left-sidebar/migrate'
+const PURGE_ROUTE = '/ostar-dsh-left-sidebar/purge'
+const ORPHANS_ROUTE = '/ostar-dsh-left-sidebar/orphans'
+/** 只接受安全的会话/工作区 id,避免任何路径穿越。 */
+const SAFE_ID = /^[A-Za-z0-9_-]{1,128}$/
+/** 孤立会话预览的返回上限（避免超大响应）。 */
+const ORPHAN_PREVIEW_LIMIT = 200
 
 function json(res, status, body) {
   try {
@@ -48,6 +64,171 @@ function readBody(req) {
     req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')))
     req.on('error', () => resolve(''))
   })
+}
+
+/** 删除会话日志目录：`~/.dsh/sessions/<cwd编码>/<sessionId>/`。 */
+async function removeSessionLogs(sessionIds) {
+  const root = join(homedir(), '.dsh', 'sessions')
+  const removed = []
+  const missing = []
+  let encodings
+  try {
+    encodings = await readdir(root, { withFileTypes: true })
+  } catch {
+    return { removed, missing: sessionIds.slice() }
+  }
+  for (const sid of sessionIds) {
+    let hit = false
+    for (const entry of encodings) {
+      if (!entry.isDirectory()) continue
+      const dir = join(root, entry.name, sid)
+      try {
+        const info = await stat(dir)
+        if (!info.isDirectory()) continue
+        await rm(dir, { recursive: true, force: true })
+        hit = true
+        break
+      } catch {
+        /* 该编码目录下不存在或无权限 → 继续匹配下一个 */
+      }
+    }
+    if (hit) removed.push(sid)
+    else missing.push(sid)
+  }
+  return { removed, missing }
+}
+
+/** 删除投影缓存分片：`~/.dsh/storages/session_projcache/sessions/<sessionId>.json`。 */
+async function removeProjcacheShards(sessionIds) {
+  const dir = join(homedir(), '.dsh', 'storages', 'session_projcache', 'sessions')
+  let count = 0
+  for (const sid of sessionIds) {
+    try {
+      await rm(join(dir, sid + '.json'), { force: true })
+      count++
+    } catch {
+      /* 忽略 */
+    }
+  }
+  return count
+}
+
+/** 从 workspace.json 摘除已删工作区，并清理悬挂的会话引用（原子写回）。 */
+async function pruneWorkspaceRegistry(sessionIds, workspaceIds) {
+  const file = join(homedir(), '.dsh', 'storages', 'workspace.json')
+  let data
+  try {
+    data = JSON.parse(await readFile(file, 'utf8'))
+  } catch {
+    return false
+  }
+  const sidSet = new Set(sessionIds)
+  const widSet = new Set(workspaceIds)
+  const workspaces = data && data.tables && data.tables.workspaces ? data.tables.workspaces : null
+  if (workspaces !== null) {
+    for (const wid of Object.keys(workspaces)) {
+      if (widSet.has(wid)) {
+        delete workspaces[wid]
+        continue
+      }
+      const rec = workspaces[wid]
+      if (rec === null || typeof rec !== 'object') continue
+      if (Array.isArray(rec.sessionIds)) rec.sessionIds = rec.sessionIds.filter((x) => !sidSet.has(x))
+      if (Array.isArray(rec.archivedSessionIds)) rec.archivedSessionIds = rec.archivedSessionIds.filter((x) => !sidSet.has(x))
+    }
+  }
+  const global = data && data.global ? data.global : null
+  if (global !== null) {
+    if (Array.isArray(global.workspaceIds)) global.workspaceIds = global.workspaceIds.filter((x) => !widSet.has(x))
+    if (Array.isArray(global.archivedSessionIds)) global.archivedSessionIds = global.archivedSessionIds.filter((x) => !sidSet.has(x))
+  }
+  const tmp = file + '.purge-tmp'
+  await writeFile(tmp, JSON.stringify(data, null, 2), 'utf8')
+  await rename(tmp, file)
+  return true
+}
+
+/** 读取官方账目中的全部会话 id（在工作区中的 + 已归档的）。 */
+async function readAccountedSessions() {
+  const accounted = new Set()
+  const file = join(homedir(), '.dsh', 'storages', 'workspace.json')
+  try {
+    const data = JSON.parse(await readFile(file, 'utf8'))
+    const global = data && data.global ? data.global : {}
+    if (Array.isArray(global.archivedSessionIds)) for (const x of global.archivedSessionIds) accounted.add(x)
+    const workspaces = data && data.tables && data.tables.workspaces ? data.tables.workspaces : {}
+    for (const wid of Object.keys(workspaces)) {
+      const rec = workspaces[wid]
+      if (rec === null || typeof rec !== 'object') continue
+      if (Array.isArray(rec.sessionIds)) for (const x of rec.sessionIds) accounted.add(x)
+      if (Array.isArray(rec.archivedSessionIds)) for (const x of rec.archivedSessionIds) accounted.add(x)
+    }
+  } catch {
+    /* 账目不可读 → 返回空集合（调用方据此保守处理） */
+  }
+  return accounted
+}
+
+/** 目录名（cwd 编码）→ 可读路径，仅用于展示。 */
+function decodeCwdDirectory(name) {
+  const inner = name.replace(/^--/, '').replace(/--$/, '')
+  // 编码形如 `~9662~611F~8BCA~` —— 相邻转义共用波浪号，必须先逐段解码再清掉分隔符。
+  return inner
+    .replace(/~([0-9A-Fa-f]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+    .replace(/~/g, '')
+    .replace(/-/g, '/')
+}
+
+/**
+ * 扫描 `~/.dsh/sessions/`，找出既不在工作区账目、也不在归档列表中的会话日志
+ * —— 这些是删除工作区/会话后残留、会在 DSH 重建索引或重装后「复活」的数据。
+ */
+async function scanOrphanSessions() {
+  const root = join(homedir(), '.dsh', 'sessions')
+  const accounted = await readAccountedSessions()
+  const orphans = []
+  let scanned = 0
+  let encodings
+  try {
+    encodings = await readdir(root, { withFileTypes: true })
+  } catch {
+    return { orphans, scanned, accounted: accounted.size }
+  }
+  for (const entry of encodings) {
+    if (!entry.isDirectory()) continue
+    const dir = join(root, entry.name)
+    let children
+    try {
+      children = await readdir(dir, { withFileTypes: true })
+    } catch {
+      continue
+    }
+    for (const child of children) {
+      if (!child.isDirectory() || !SAFE_ID.test(child.name)) continue
+      scanned++
+      if (accounted.has(child.name)) continue
+      let bytes = 0
+      let updatedAt = 0
+      try {
+        const sessionDir = join(dir, child.name)
+        const files = await readdir(sessionDir)
+        for (const f of files) {
+          try {
+            const info = await stat(join(sessionDir, f))
+            if (info.isFile()) bytes += info.size
+            if (info.mtimeMs > updatedAt) updatedAt = info.mtimeMs
+          } catch {
+            /* 忽略单个文件 */
+          }
+        }
+      } catch {
+        /* 忽略 */
+      }
+      orphans.push({ sessionId: child.name, cwd: decodeCwdDirectory(entry.name), bytes, updatedAt })
+    }
+  }
+  orphans.sort((a, b) => b.updatedAt - a.updatedAt)
+  return { orphans, scanned, accounted: accounted.size }
 }
 
 export function apply(ctx) {
@@ -182,4 +363,107 @@ export function apply(ctx) {
       json(res, 405, { ok: false, error: 'method-not-allowed' })
     },
   }), 'ostar-dsh-left-sidebar: groups route')
+
+  // ---- 彻底删除：清理官方删除后残留的本地会话数据 ----
+  ctx.effect(() => webServer.register({
+    kind: 'exact',
+    path: PURGE_ROUTE,
+    handler: async (req, res) => {
+      if (req.method !== 'POST') {
+        json(res, 405, { ok: false, error: 'method-not-allowed' })
+        return
+      }
+      let args = {}
+      try {
+        args = JSON.parse((await readBody(req)) || '{}')
+      } catch {
+        json(res, 400, { ok: false, error: 'bad-json' })
+        return
+      }
+      const rawSessions = args !== null && typeof args === 'object' && Array.isArray(args.sessionIds) ? args.sessionIds : []
+      const rawWorkspaces = args !== null && typeof args === 'object' && Array.isArray(args.workspaceIds) ? args.workspaceIds : []
+      const sessionIds = rawSessions.filter((x) => typeof x === 'string' && SAFE_ID.test(x))
+      const workspaceIds = rawWorkspaces.filter((x) => typeof x === 'string' && SAFE_ID.test(x))
+      if (sessionIds.length === 0 && workspaceIds.length === 0) {
+        json(res, 400, { ok: false, error: 'bad-args' })
+        return
+      }
+      try {
+        const logs = await removeSessionLogs(sessionIds)
+        const shards = await removeProjcacheShards(sessionIds)
+        let registryPruned = false
+        try {
+          registryPruned = await pruneWorkspaceRegistry(sessionIds, workspaceIds)
+        } catch {
+          registryPruned = false
+        }
+        json(res, 200, {
+          ok: true,
+          sessionsRemoved: logs.removed.length,
+          sessionsMissing: logs.missing.length,
+          projcacheShardsRemoved: shards,
+          workspacesPruned: workspaceIds.length,
+          registryPruned,
+        })
+      } catch (reason) {
+        json(res, 500, { ok: false, error: String(reason && reason.message ? reason.message : reason) })
+      }
+    },
+  }), 'ostar-dsh-left-sidebar: purge route')
+
+  // ---- 孤立数据：预览(GET) / 清理(POST) ----
+  ctx.effect(() => webServer.register({
+    kind: 'exact',
+    path: ORPHANS_ROUTE,
+    handler: async (req, res) => {
+      try {
+        if (req.method === 'GET') {
+          const result = await scanOrphanSessions()
+          const items = result.orphans.slice(0, ORPHAN_PREVIEW_LIMIT)
+          const bytes = result.orphans.reduce((sum, item) => sum + item.bytes, 0)
+          json(res, 200, {
+            ok: true,
+            total: result.orphans.length,
+            bytes: bytes,
+            scanned: result.scanned,
+            accounted: result.accounted,
+            items: items,
+          })
+          return
+        }
+        if (req.method === 'POST') {
+          let args = {}
+          try {
+            args = JSON.parse((await readBody(req)) || '{}')
+          } catch {
+            json(res, 400, { ok: false, error: 'bad-json' })
+            return
+          }
+          const raw = args !== null && typeof args === 'object' && Array.isArray(args.sessionIds) ? args.sessionIds : []
+          const wanted = new Set(raw.filter((x) => typeof x === 'string' && SAFE_ID.test(x)))
+          if (wanted.size === 0) {
+            json(res, 400, { ok: false, error: 'bad-args' })
+            return
+          }
+          // 二次保险:只删除确实不在官方账目中的会话。
+          const accounted = await readAccountedSessions()
+          const targets = Array.from(wanted).filter((id) => !accounted.has(id))
+          const logs = await removeSessionLogs(targets)
+          const shards = await removeProjcacheShards(targets)
+          json(res, 200, {
+            ok: true,
+            requested: wanted.size,
+            removed: logs.removed.length,
+            skippedAccounted: wanted.size - targets.length,
+            missing: logs.missing.length,
+            projcacheShardsRemoved: shards,
+          })
+          return
+        }
+        json(res, 405, { ok: false, error: 'method-not-allowed' })
+      } catch (reason) {
+        json(res, 500, { ok: false, error: String(reason && reason.message ? reason.message : reason) })
+      }
+    },
+  }), 'ostar-dsh-left-sidebar: orphans route')
 }

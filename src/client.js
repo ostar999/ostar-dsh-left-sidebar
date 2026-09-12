@@ -148,6 +148,13 @@ const createdLabel = (createdAt) => {
   const p2 = (v) => String(v).padStart(2, '0')
   return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日 ' + p2(d.getHours()) + ':' + p2(d.getMinutes())
 }
+const fmtBytes = (n) => {
+  const v = Number(n) || 0
+  if (v >= 1073741824) return (v / 1073741824).toFixed(1) + ' GB'
+  if (v >= 1048576) return (v / 1048576).toFixed(1) + ' MB'
+  if (v >= 1024) return Math.round(v / 1024) + ' KB'
+  return v + ' B'
+}
 
     exports.name = "ostar-dsh-left-sidebar"
     exports.inject = ["slots", "workspaces", "sessions"]
@@ -286,6 +293,15 @@ const createdLabel = (createdAt) => {
 .wsmgr-gmgr-del.confirm{background:var(--dsw-alias-state-error-primary,#e5484d);color:#fff}
 .wsmgr-gmgr-hint{padding:6px 8px 4px;font-size:11px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8a8a8a)}
 .wsmgr-unpick-btn{flex:none;padding:0 6px;border-radius:5px;font-size:11px;line-height:18px;color:var(--dsw-alias-label-secondary,#9a9a9a);background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wsmgr-orphans{width:400px;max-width:calc(100vw - 24px)}
+.wsmgr-orphans-body{display:flex;flex-direction:column;gap:4px;padding:2px 2px 6px;max-height:260px;overflow-y:auto}
+.wsmgr-orphans-sum{font-size:12px;line-height:18px;color:var(--dsw-alias-label-primary,#e8e8e8);padding:2px 5px}
+.wsmgr-orphans-hint{font-size:11px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8a8a8a);padding:2px 5px}
+.wsmgr-orphans-row{display:flex;align-items:center;gap:6px;padding:3px 5px;border-radius:5px;background:rgba(128,128,128,.06);font-size:11px;line-height:16px;color:var(--dsw-alias-label-secondary,#9a9a9a)}
+.wsmgr-orphans-time{flex:none;width:58px}
+.wsmgr-orphans-path{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;direction:rtl;text-align:left}
+.wsmgr-orphans-size{flex:none;color:var(--dsw-alias-label-tertiary,#8a8a8a)}
+.wsmgr-orphans-actions{display:flex;align-items:center;justify-content:flex-end;gap:6px;padding:6px 4px 2px;border-top:1px solid rgba(128,128,128,.18);margin-top:4px}
 `
   styles.insert(CSS)
 
@@ -360,6 +376,13 @@ const createdLabel = (createdAt) => {
     const [selWs, setSelWs] = React.useState(() => new Set())
     const [selSes, setSelSes] = React.useState(() => new Set())
     const [withSessions, setWithSessions] = React.useState(true)
+    const [purgeLogs, setPurgeLogs] = React.useState(() => {
+      try { return window.localStorage.getItem('ostar-dsh-left-sidebar.purgeLogs') !== '0' } catch (e) { return true }
+    })
+    const setPurgeLogsPersist = (v) => {
+      setPurgeLogs(v)
+      try { window.localStorage.setItem('ostar-dsh-left-sidebar.purgeLogs', v ? '1' : '0') } catch (e) { /* 忽略 */ }
+    }
     const [confirming, setConfirming] = React.useState(null)
     const [busy, setBusy] = React.useState(false)
     const [err, setErr] = React.useState(null)
@@ -383,6 +406,7 @@ const createdLabel = (createdAt) => {
     }
     const [groupPick, setGroupPick] = React.useState(null)
     const [groupMgr, setGroupMgr] = React.useState(false)
+    const [orphans, setOrphans] = React.useState(null)
     const [groupMgrConfirm, setGroupMgrConfirm] = React.useState(null)
     const [newGroupOpen, setNewGroupOpen] = React.useState(false)
     const [newGroupName, setNewGroupName] = React.useState('')
@@ -528,6 +552,31 @@ const createdLabel = (createdAt) => {
 
     const startSession = (wid) => { const svc = wsSvc(); if (svc) svc.startSession(wid) }
 
+    /**
+     * 彻底删除:官方「删除会话」只是归档(日志留在 ~/.dsh/sessions)、「删除工作区」
+     * 只移除注册 —— 残留数据会在 DSH 重建索引 / 重装后被重新登记(列表“复活”)。
+     * 这里在官方删除之后清理本地残留:会话日志目录 + 投影缓存分片 + 注册表悬挂引用。
+     */
+    const purgeLocalData = (sessionIds, workspaceIds) => {
+      if (sessionIds.length === 0 && workspaceIds.length === 0) return
+      fetch('/ostar-dsh-left-sidebar/purge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionIds: sessionIds, workspaceIds: workspaceIds }),
+      })
+        .then((r) => r.text())
+        .then((text) => {
+          let res = null
+          try { res = JSON.parse(text) } catch (e) {
+            setErr('本地残留清理失败(响应: ' + (text ? text.slice(0, 120) : '空') + '),请确认已重启 DSH')
+            return
+          }
+          if (res && !res.ok) setErr(String(res.error || '本地残留清理失败'))
+          else if (res && res.sessionsMissing > 0) setErr('已删除,但 ' + res.sessionsMissing + ' 个会话未找到本地日志(可能已被清理)')
+        })
+        .catch((e) => setErr(String(e && e.message ? e.message : e)))
+    }
+
     const doDelete = async () => {
       if (!confirming) return
       const svc = wsSvc()
@@ -546,6 +595,7 @@ const createdLabel = (createdAt) => {
         }
         for (const sid of sesIds) await svc.archiveSession(sid)
         for (const wid of wsIds) await svc.delete(wid)
+        if (purgeLogs) purgeLocalData(Array.from(sesIds), wsIds.slice())
         setSelWs((prev) => new Set(Array.from(prev).filter((id) => !wsIds.includes(id))))
         setSelSes((prev) => new Set(Array.from(prev).filter((id) => !sesIds.has(id))))
         setConfirming(null)
@@ -593,7 +643,62 @@ const createdLabel = (createdAt) => {
     }
 
     const deleteOneWs = (id) => {
-      wsSvc().delete(id).catch((e) => setErr(String(e && e.message ? e.message : e)))
+      wsSvc().delete(id)
+        .then(() => { if (purgeLogs) purgeLocalData([], [id]) })
+        .catch((e) => setErr(String(e && e.message ? e.message : e)))
+    }
+
+    /** 孤立数据(不在任何工作区账目中的遗留会话日志):预览 → 清理。 */
+    const scanOrphans = () => {
+      setOrphans({ loading: true, total: 0, bytes: 0, items: [], checked: false })
+      fetch('/ostar-dsh-left-sidebar/orphans')
+        .then((r) => r.text())
+        .then((text) => {
+          let res = null
+          try { res = JSON.parse(text) } catch (e) {
+            setOrphans(null)
+            setErr('孤立数据扫描失败(响应: ' + (text ? text.slice(0, 120) : '空') + '),请确认已重启 DSH')
+            return
+          }
+          if (!res || !res.ok) {
+            setOrphans(null)
+            setErr(String((res && res.error) || '孤立数据扫描失败'))
+            return
+          }
+          setOrphans({ loading: false, total: res.total, bytes: res.bytes, scanned: res.scanned, items: res.items || [], checked: false })
+        })
+        .catch((e) => { setOrphans(null); setErr(String(e && e.message ? e.message : e)) })
+    }
+
+    const cleanOrphans = () => {
+      if (!orphans || orphans.total === 0) return
+      const ids = orphans.items.map((x) => x.sessionId)
+      setOrphans({ ...orphans, loading: true })
+      fetch('/ostar-dsh-left-sidebar/orphans', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionIds: ids }),
+      })
+        .then((r) => r.text())
+        .then((text) => {
+          let res = null
+          try { res = JSON.parse(text) } catch (e) {
+            setErr('孤立数据清理失败(响应: ' + (text ? text.slice(0, 120) : '空') + ')')
+            setOrphans(null)
+            return
+          }
+          if (!res || !res.ok) {
+            setErr(String((res && res.error) || '孤立数据清理失败'))
+            setOrphans(null)
+            return
+          }
+          if (res.skippedAccounted > 0) setErr('已清理 ' + res.removed + ' 项,' + res.skippedAccounted + ' 项仍在工作区账目中,已跳过')
+          // 单次上限为预览条数:清理后自动重扫,便于继续清理剩余项。
+          setOrphans({ loading: true, total: 0, bytes: 0, items: [], scanned: 0 })
+          if (res.removed > 0) scanOrphans()
+          else setOrphans(null)
+        })
+        .catch((e) => { setOrphans(null); setErr(String(e && e.message ? e.message : e)) })
     }
 
     const refreshStores = () => {
@@ -1046,6 +1151,41 @@ const createdLabel = (createdAt) => {
       )
     }
 
+    let orphansEl = null
+    if (orphans) {
+      const iw = typeof window !== 'undefined' ? window.innerWidth : 1200
+      const ih = typeof window !== 'undefined' ? window.innerHeight : 800
+      let left = iw / 2 - 200
+      if (left < 8) left = 8
+      let top = Math.max(24, ih / 2 - 180)
+      const preview = orphans.items.slice(0, 8)
+      orphansEl = React.createElement('div', null,
+        React.createElement('div', { className: 'wsmgr-menu-mask', onClick: () => { if (!orphans.loading) setOrphans(null) } }),
+        React.createElement('div', { className: 'wsmgr-rowmenu wsmgr-orphans', style: { left: left, top: top } },
+          React.createElement('div', { className: 'wsmgr-rowmenu-label' }, '清理孤立会话数据'),
+          orphans.loading
+            ? React.createElement('div', { className: 'wsmgr-rowmenu-empty' }, '处理中…')
+            : React.createElement('div', { className: 'wsmgr-orphans-body' },
+                React.createElement('div', { className: 'wsmgr-orphans-sum' },
+                  orphans.total === 0
+                    ? '没有发现孤立数据(扫描 ' + orphans.scanned + ' 个会话)'
+                    : '发现 ' + orphans.total + ' 个不在任何工作区中的会话日志,共 ' + fmtBytes(orphans.bytes) + '。'),
+                orphans.total > 0 ? React.createElement('div', { className: 'wsmgr-orphans-hint' }, '这些通常是删除工作区/会话后遗留的日志,会在 DSH 重建索引或重装后「复活」到列表中。清理后不可恢复。') : null,
+                preview.map((item) => React.createElement('div', { key: item.sessionId, className: 'wsmgr-orphans-row' },
+                  React.createElement('span', { className: 'wsmgr-orphans-time' }, item.updatedAt ? timeText(item.updatedAt, now) : '—'),
+                  React.createElement('span', { className: 'wsmgr-orphans-path', title: item.cwd }, item.cwd || item.sessionId),
+                  React.createElement('span', { className: 'wsmgr-orphans-size' }, fmtBytes(item.bytes)),
+                )),
+                orphans.total > preview.length ? React.createElement('div', { className: 'wsmgr-orphans-hint' }, '仅列出最近 ' + preview.length + ' 项(单次最多清理 ' + orphans.items.length + ' 项)') : null,
+              ),
+          React.createElement('div', { className: 'wsmgr-orphans-actions' },
+            React.createElement('button', { type: 'button', className: 'wsmgr-tbtn danger', disabled: orphans.loading || orphans.total === 0, onClick: cleanOrphans }, orphans.total === 0 ? '无数据可清理' : '清理这 ' + orphans.items.length + ' 项'),
+            React.createElement('button', { type: 'button', className: 'wsmgr-tbtn', disabled: orphans.loading, onClick: () => setOrphans(null) }, '取消'),
+          ),
+        ),
+      )
+    }
+
     return React.createElement('div', { className: 'wsmgr-root' + (wide ? '' : ' rail') },
       React.createElement('div', { className: 'wsmgr-header' },
         wide ? React.createElement('span', { className: 'wsmgr-hlabel', style: searchOpen ? { opacity: 0, visibility: 'hidden', maxWidth: 0, marginRight: -4 } : {} }, groupBy === 'flat' ? '会话' : '工作区') : null,
@@ -1104,7 +1244,7 @@ const createdLabel = (createdAt) => {
           : React.createElement('button', { type: 'button', className: 'wsmgr-gtag wsmgr-gadd', title: '新建分组', onClick: () => setNewGroupOpen(true) }, '+'),
       ) : null,
       confirming ? React.createElement('div', { className: 'wsmgr-confirm' },
-        React.createElement('span', null, '确认删除 ' + confirming.wsIds.length + ' 个工作区' + (withSessions && confirming.wsIds.length > 0 ? '(连同其会话)' : '') + (confirming.sesIds.length > 0 ? (confirming.wsIds.length > 0 ? '、' : '') + confirming.sesIds.length + ' 个会话' : '') + '?'),
+        React.createElement('span', null, '确认删除 ' + confirming.wsIds.length + ' 个工作区' + (withSessions && confirming.wsIds.length > 0 ? '(连同其会话)' : '') + (confirming.sesIds.length > 0 ? (confirming.wsIds.length > 0 ? '、' : '') + confirming.sesIds.length + ' 个会话' : '') + '?' + (purgeLogs ? ' 将同时清除本地会话日志(不可恢复)' : ' 仅从列表移除,本地日志保留')),
         React.createElement('span', { className: 'wsmgr-tspr' }),
         React.createElement('button', { type: 'button', className: 'wsmgr-tbtn danger', disabled: busy, onClick: doDelete }, busy ? '删除中…' : '确认删除'),
         React.createElement('button', { type: 'button', className: 'wsmgr-tbtn', disabled: busy, onClick: () => setConfirming(null) }, '取消'),
@@ -1116,8 +1256,13 @@ const createdLabel = (createdAt) => {
           React.createElement('input', { type: 'checkbox', checked: withSessions, onChange: (e) => setWithSessions(e.target.checked) }),
           React.createElement('span', null, '连同会话删除'),
         ),
+        React.createElement('label', { className: 'wsmgr-tcheck', title: '官方删除只是归档(日志留在 ~/.dsh/sessions),勾选后同时删除本地日志与缓存,彻底不可恢复' },
+          React.createElement('input', { type: 'checkbox', checked: purgeLogs, onChange: (e) => setPurgeLogsPersist(e.target.checked) }),
+          React.createElement('span', null, '彻底删除本地日志'),
+        ),
         React.createElement('span', { className: 'wsmgr-tcount' }, '已选 ' + selWs.size + ' 个工作区 · ' + effectiveSes.size + ' 个会话'),
         React.createElement('span', { className: 'wsmgr-tspr' }),
+        React.createElement('button', { type: 'button', className: 'wsmgr-tbtn', title: '扫描并清理已删除工作区/会话遗留在 ~/.dsh/sessions 的孤立日志(不在任何工作区账目中的会话)', onClick: scanOrphans }, '清理孤立数据'),
         React.createElement('button', { type: 'button', className: 'wsmgr-tbtn danger', disabled: selWs.size === 0 && selSes.size === 0, onClick: () => setConfirming({ wsIds: Array.from(selWs), sesIds: Array.from(selSes) }) }, '删除选中'),
       ) : null,
       err ? React.createElement('div', { className: 'wsmgr-err' }, err) : null,
@@ -1126,6 +1271,7 @@ const createdLabel = (createdAt) => {
       pickEl,
       groupPickEl,
       groupMgrEl,
+      orphansEl,
       hcEl,
     )
   }
