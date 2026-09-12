@@ -540,16 +540,60 @@ const fmtBytes = (n) => {
       return [{ state: 'done', label: '空闲' }]
     }
 
-    const toggleWs = (id) => setSelWs((prev) => { const n = new Set(prev); if (n.has(id)) n.delete(id); else n.add(id); return n })
-    const toggleSes = (id) => setSelSes((prev) => { const n = new Set(prev); if (n.has(id)) n.delete(id); else n.add(id); return n })
+    const memberIdsOf = (wsKey) => {
+      const group = groups.find((g) => g.key === wsKey)
+      return group ? group.members.map((m) => m.id) : []
+    }
+    // 选中集合以 ref 保存“最新值”:同一事件循环内连续点击(含脚本/快速连点)也不会丢更新。
+    const selWsRef = React.useRef(selWs)
+    const selSesRef = React.useRef(selSes)
+    const commitSel = (wsSet, sesSet) => {
+      selWsRef.current = wsSet
+      selSesRef.current = sesSet
+      setSelWs(wsSet)
+      setSelSes(sesSet)
+    }
+    /**
+     * 工作区勾选 ⇄ 会话勾选 双向联动:
+     * - 勾选工作区 → 勾选其下全部会话(「连同会话删除」关闭时不连坐,避免误删);
+     * - 取消工作区 → 取消其下全部会话;
+     * - 勾选 / 取消会话 → 该工作区按「是否全部会话已勾选」自动同步。
+     */
+    const toggleWs = (id) => {
+      const nextWs = new Set(selWsRef.current)
+      const willCheck = !nextWs.has(id)
+      if (willCheck) nextWs.add(id)
+      else nextWs.delete(id)
+      const nextSes = new Set(selSesRef.current)
+      for (const mid of memberIdsOf(id)) {
+        if (!willCheck) nextSes.delete(mid)
+        else if (withSessions) nextSes.add(mid)
+      }
+      commitSel(nextWs, nextSes)
+    }
+    const toggleSes = (id, wsKey) => {
+      const nextSes = new Set(selSesRef.current)
+      if (nextSes.has(id)) nextSes.delete(id)
+      else nextSes.add(id)
+      const nextWs = new Set(selWsRef.current)
+      if (wsKey !== undefined && wsKey !== '') {
+        const members = memberIdsOf(wsKey)
+        const allChecked = members.length > 0 && members.every((mid) => nextSes.has(mid))
+        if (allChecked) nextWs.add(wsKey)
+        else nextWs.delete(wsKey)
+      }
+      commitSel(nextWs, nextSes)
+    }
     const toggleGroup = (key) => setExpanded((prev) => { const n = new Set(prev); if (n.has(key)) n.delete(key); else n.add(key); return n })
     const expandAll = () => setExpanded(new Set(groups.map((g) => g.key)))
     const collapseAll = () => setExpanded(new Set())
     const selectAll = () => {
-      setSelWs(new Set(groups.map((g) => g.key).filter((k) => k !== '')))
-      setSelSes(new Set((groupBy === 'flat' ? flatRows : groups.reduce((acc, g) => acc.concat(g.members), [])).map((s) => s.id)))
+      commitSel(
+        new Set(groups.map((g) => g.key).filter((k) => k !== '')),
+        new Set((groupBy === 'flat' ? flatRows : groups.reduce((acc, g) => acc.concat(g.members), [])).map((s) => s.id)),
+      )
     }
-    const clearSel = () => { setSelWs(new Set()); setSelSes(new Set()) }
+    const clearSel = () => commitSel(new Set(), new Set())
 
     const open = (id) => {
       const ui = uiWs()
@@ -673,8 +717,10 @@ const fmtBytes = (n) => {
         for (const sid of sesIds) await archiveSessionVia(sid)
         for (const wid of wsIds) await svc.delete(wid)
         if (purgeLogs) purgeLocalData(Array.from(sesIds), wsIds.slice())
-        setSelWs((prev) => new Set(Array.from(prev).filter((id) => !wsIds.includes(id))))
-        setSelSes((prev) => new Set(Array.from(prev).filter((id) => !sesIds.has(id))))
+        commitSel(
+          new Set(Array.from(selWsRef.current).filter((id) => !wsIds.includes(id))),
+          new Set(Array.from(selSesRef.current).filter((id) => !sesIds.has(id))),
+        )
         setConfirming(null)
       } catch (e) {
         setErr(String(e && e.message ? e.message : e))
@@ -1006,7 +1052,7 @@ const fmtBytes = (n) => {
         onMouseEnter: (e) => { if (rowMenu && rowMenu.id === m.id) return; const r = e.currentTarget.getBoundingClientRect(); setHc({ kind: 'ses', id: m.id, rect: { top: r.top, right: r.right } }) },
         onMouseLeave: () => setHc((prev) => prev && prev.id === m.id && prev.kind === 'ses' ? null : prev),
       },
-        manage ? React.createElement('input', { type: 'checkbox', className: 'wsmgr-check', checked: selSes.has(m.id), onChange: () => toggleSes(m.id), onClick: (e) => e.stopPropagation() }) : null,
+        manage ? React.createElement('input', { type: 'checkbox', className: 'wsmgr-check', checked: selSes.has(m.id), onChange: () => toggleSes(m.id, wsKey), onClick: (e) => e.stopPropagation() }) : null,
         React.createElement('span', { className: 'wsmgr-slot' }, stateDot(st.state)),
         isRenaming
           ? React.createElement('input', { className: 'wsmgr-renameInput', value: renaming.value, autoFocus: true, onChange: (e) => setRenaming({ kind: 'ses', id: m.id, value: e.target.value }), onKeyDown: (e) => { if (e.key === 'Enter') commitRename(); if (e.key === 'Escape') setRenaming(null) }, onClick: (e) => e.stopPropagation() })

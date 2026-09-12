@@ -7,7 +7,7 @@
   <b style="font-size: 1.15em;">不牺牲官方体验的工作区管理</b><br />
   官方工作区浏览器的<b>全部功能、样式与交互逐项复刻保留</b>,管理能力以<b>同尺寸按钮</b>叠加在其上<br /><br />
   <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
-  <img alt="version" src="https://img.shields.io/badge/version-0.4.1-4d6bfe" />
+  <img alt="version" src="https://img.shields.io/badge/version-0.4.2-4d6bfe" />
   <img alt="纯 JS 无构建" src="https://img.shields.io/badge/build-none%20%28plain%20JS%29-2fbf71" /><br /><br />
   <img alt="批量删除工作区" src="https://img.shields.io/badge/-批量删除工作区-4d6bfe" />
   <img alt="批量·单选删除会话" src="https://img.shields.io/badge/-批量·单选删除会话-4d6bfe" />
@@ -62,7 +62,7 @@
 
 | 能力 | 说明 |
 | --- | --- |
-| 🗑️ **批量删除工作区** | 批量选中模式:每个工作区行复选框 + 「全选」+「删除选中」;可选「连同会话删除」(默认开启) |
+| 🗑️ **批量删除工作区** | 批量选中模式:每个工作区行复选框 + 「全选」+「删除选中」;可选「连同会话删除」(默认开启);**工作区与会话勾选双向联动** |
 | 💬 **批量删除会话** | 每个会话行复选框,支持多选后一次性删除 |
 | 🎯 **单选删除会话** | 会话行 hover 出现「删除」按钮;会话 `···` 菜单含「删除会话」项(红色,二次确认) |
 | 🧹 **彻底删除本地数据** | 官方「删除」= 归档 + 移除注册,会话日志(`~/.dsh/sessions/<cwd编码>/<id>/`)与投影缓存分片会留在磁盘上,重装 DSH / 重建索引后会重新登记(列表“复活”)。插件默认在删除后一并清除这些残留,并摘除 `workspace.json` 中的悬挂引用(批量工具条可关闭) |
@@ -204,6 +204,7 @@ rm -rf ~/.dsh/ostar-dsh-left-sidebar          # 分组 / 收藏数据(groups.jso
 | 进入 / 退出批量选中 | 标题行 ☑ 按钮(窄侧边栏会自动展开侧边栏) |
 | 全选 / 清空选择 | 批量工具条「全选」「清空」 |
 | 连同会话删除工作区 | 批量工具条「连同会话删除」勾选框(默认开启) |
+| 工作区 ⇄ 会话勾选联动 | 勾选工作区自动勾选其下全部会话;取消任一勾选则工作区勾选自动取消(会话全部勾回时工作区自动勾上) |
 | 彻底删除 / 仅移除注册 | 批量工具条「彻底删除本地日志」勾选框(默认开启;关闭则保留 `~/.dsh/sessions/` 日志) |
 | 清理历史遗留数据 | 批量工具条「清理孤立数据」→ 预览 → 「清理这 N 项」 |
 | 删除选中项 | 批量工具条「删除选中」→ 确认条「确认删除」 |
