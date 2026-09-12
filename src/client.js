@@ -424,6 +424,12 @@ const fmtBytes = (n) => {
 
     const wsSvc = () => ctx.get('workspaces')
     const sesSvc = () => ctx.get('sessions')
+    /**
+     * 官方浏览器的新建会话 / 打开会话 / 分叉 / 归档 / 选目录都走 `uiWorkspace`
+     * 客户端服务（`ui-workspace` 插件提供，内部处理工作区连接与 layout 导航），
+     * 而非直接调用 `ctx.workspaces.*`。这里优先用它，缺失时回退到旧路径。
+     */
+    const uiWs = () => ctx.get('uiWorkspace')
 
     React.useEffect(() => {
       let alive = true
@@ -545,7 +551,11 @@ const fmtBytes = (n) => {
     }
     const clearSel = () => { setSelWs(new Set()); setSelSes(new Set()) }
 
-    const open = (id) => { const svc = sesSvc(); if (svc) svc.open(id) }
+    const open = (id) => {
+      const ui = uiWs()
+      if (ui && typeof ui.openSession === 'function') { ui.openSession(id); return }
+      const svc = sesSvc(); if (svc) svc.open(id)
+    }
 
     /**
      * 定位到当前会话:找到它所属的工作区 → 必要时切回「全部」分组 / 清空搜索 /
@@ -586,16 +596,38 @@ const fmtBytes = (n) => {
 
     const addWorkspace = async () => {
       const svc = wsSvc()
-      if (!svc) return
+      if (!svc) { setErr('workspaces 服务不可用'); return }
       try {
-        const path = await svc.pickDirectory()
-        if (path) await svc.create({ path })
+        // 与官方一致:目录选择在 uiWorkspace 服务上,创建走 workspaces.create({ path })。
+        const ui = uiWs()
+        let path = null
+        if (ui && typeof ui.pickDirectory === 'function') path = await ui.pickDirectory()
+        else if (typeof svc.pickDirectory === 'function') path = await svc.pickDirectory()
+        else { setErr('目录选择器不可用(未找到 uiWorkspace 服务),请重启 DSH 后重试'); return }
+        if (!path) return
+        await svc.create({ path })
       } catch (e) {
         setErr(String(e && e.message ? e.message : e))
       }
     }
 
-    const startSession = (wid) => { const svc = wsSvc(); if (svc) svc.startSession(wid) }
+    /** 新建会话:与官方「工作区行 +」一致,走 uiWorkspace.startSession(工作区连接 + 导航)。 */
+    const startSession = (wid) => {
+      const ui = uiWs()
+      if (ui && typeof ui.startSession === 'function') { ui.startSession(wid); return }
+      const svc = wsSvc()
+      if (svc && typeof svc.startSession === 'function') { svc.startSession(wid); return }
+      setErr('新建会话接口不可用,请重启 DSH 后重试')
+    }
+
+    /** 归档会话:官方经 uiWorkspace.archiveSession 转发。 */
+    const archiveSessionVia = (id) => {
+      const ui = uiWs()
+      if (ui && typeof ui.archiveSession === 'function') return ui.archiveSession(id)
+      const svc = wsSvc()
+      if (!svc || typeof svc.archiveSession !== 'function') throw new Error('归档接口不可用')
+      return svc.archiveSession(id)
+    }
 
     /**
      * 彻底删除:官方「删除会话」只是归档(日志留在 ~/.dsh/sessions)、「删除工作区」
@@ -638,7 +670,7 @@ const fmtBytes = (n) => {
             }
           }
         }
-        for (const sid of sesIds) await svc.archiveSession(sid)
+        for (const sid of sesIds) await archiveSessionVia(sid)
         for (const wid of wsIds) await svc.delete(wid)
         if (purgeLogs) purgeLocalData(Array.from(sesIds), wsIds.slice())
         setSelWs((prev) => new Set(Array.from(prev).filter((id) => !wsIds.includes(id))))
@@ -680,11 +712,18 @@ const fmtBytes = (n) => {
     }
 
     const forkSession = (id) => {
+      const ui = uiWs()
+      if (ui && typeof ui.forkSession === 'function') {
+        Promise.resolve(ui.forkSession(id)).catch((e) => setErr(String(e && e.message ? e.message : e)))
+        return
+      }
       sesSvc().fork({ sessionId: id, increaseTitle: true }).then((childId) => open(childId)).catch((e) => setErr(String(e && e.message ? e.message : e)))
     }
 
     const archiveOne = (id) => {
-      wsSvc().archiveSession(id).catch((e) => setErr(String(e && e.message ? e.message : e)))
+      Promise.resolve()
+        .then(() => archiveSessionVia(id))
+        .catch((e) => setErr(String(e && e.message ? e.message : e)))
     }
 
     const deleteOneWs = (id) => {

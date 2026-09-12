@@ -7,7 +7,7 @@
   <b style="font-size: 1.15em;">不牺牲官方体验的工作区管理</b><br />
   官方工作区浏览器的<b>全部功能、样式与交互逐项复刻保留</b>,管理能力以<b>同尺寸按钮</b>叠加在其上<br /><br />
   <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
-  <img alt="version" src="https://img.shields.io/badge/version-0.4.0-4d6bfe" />
+  <img alt="version" src="https://img.shields.io/badge/version-0.4.1-4d6bfe" />
   <img alt="纯 JS 无构建" src="https://img.shields.io/badge/build-none%20%28plain%20JS%29-2fbf71" /><br /><br />
   <img alt="批量删除工作区" src="https://img.shields.io/badge/-批量删除工作区-4d6bfe" />
   <img alt="批量·单选删除会话" src="https://img.shields.io/badge/-批量·单选删除会话-4d6bfe" />
@@ -239,6 +239,7 @@ rm -rf ~/.dsh/ostar-dsh-left-sidebar          # 分组 / 收藏数据(groups.jso
                                       /ostar-dsh-left-sidebar/groups
 ```
 
+- **官方入口**:新建会话(`uiWorkspace.startSession`)、打开会话(`openSession`)、分叉(`forkSession`)、归档(`archiveSession`)、选目录(`pickDirectory`)都走 `uiWorkspace` 客户端服务 —— 与官方浏览器同一入口(内部处理工作区连接与 layout 导航);`ctx.workspaces` 只用于该服务未覆盖的注册表操作(创建 / 重命名 / 删除 / 排序)。
 - **数据**:消费槽标准 hooks(`useSessions` / `useWorkspaces`,官方 session / workspace 快照 store)。会话标题、分组归属、归档标记、运行状态全部来自官方数据流,插件不维护会话副本。
 - **删除**:调用官方客户端服务 `ctx.workspaces.delete(workspaceId)` 与 `ctx.workspaces.archiveSession(sessionId)` —— 与官方浏览器完全相同,store 自动同步(工作区删除 = 注册移除;会话删除 = 归档)。
 - **彻底删除(本地数据清理)**:官方删除只在注册表层面生效,磁盘上仍留三处残留 —— 会话日志目录 `~/.dsh/sessions/<cwd编码>/<sessionId>/`、投影缓存分片 `~/.dsh/storages/session_projcache/sessions/<sessionId>.json`、以及 `workspace.json` 里悬挂的会话引用。DSH 重建索引或重装后会依据这些残留把工作区 / 会话重新登记出来(“复活”)。因此删除后由 host 路由 `POST /ostar-dsh-left-sidebar/purge` 清理上述残留(`workspace.json` 采用「临时文件 + rename」原子写回)。
@@ -346,6 +347,8 @@ cat ~/.dsh/profiles/web/package.json
 | 无法手动排序 | 排序方式需为「手动排序」(视图选项 ☰ 里切换);「最近更新」模式下拖拽不生效(与官方一致) |
 | 复制请求失败(响应:空) | host 路由未注册(见上一条 `404` 项);或 DSH 版本变化导致 `agents.create` / `attachSession` 签名变化,查浏览器 Network 面板与 DSH 控制台 |
 | 安装时出现 `✕ missing peer ...` | 其它插件的 peer 依赖**警告**(react / cordis 由 DSH 运行时提供),不影响安装与运行 |
+| 点「添加工作区」报 `svc.pickDirectory is not a function` | 0.4.1 前误把目录选择器当成 `ctx.workspaces` 的方法。目录选择与新建会话其实都在 `uiWorkspace` 客户端服务上(`ui-workspace` 插件提供)。更新到 0.4.1+ |
+| 点工作区行右侧「＋」没有反应 | 同上:`startSession` 属 `uiWorkspace.startSession`。0.4.1+ 已按官方入口调用(内部完成工作区连接与导航) |
 | 改了代码没效果 | client 改动需硬刷新;host 改动需重启 DSH;`link:`/拷贝方式确认源码已同步到 profile 包目录 |
 | 提示 `dsh: command not found` | 先安装 DSH;或 `npx -y --package @deepseek-ai/dsh dsh plugin --profile web add github:ostar999/ostar-dsh-left-sidebar` |
 
