@@ -46,7 +46,7 @@ const ORPHANS_ROUTE = '/ostar-dsh-left-sidebar/orphans'
 /** 只接受安全的会话/工作区 id,避免任何路径穿越。 */
 const SAFE_ID = /^[A-Za-z0-9_-]{1,128}$/
 /** 孤立会话预览的返回上限（避免超大响应）。 */
-const ORPHAN_PREVIEW_LIMIT = 200
+const ORPHAN_PREVIEW_LIMIT = 500
 
 function json(res, status, body) {
   try {
