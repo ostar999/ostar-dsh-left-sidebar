@@ -369,13 +369,27 @@ const fmtBytes = (n) => {
     const expandSidebar = props && props.expandSidebar ? props.expandSidebar : () => {}
     const useSessions = props && props.useSessions
     const useWorkspaces = props && props.useWorkspaces
+    // 0.2.0 起会话实时状态(运行中 / 待交互)由独立 store 提供。
+    const useSessionStatus = props && props.useSessionStatus
     if (!useSessions || !useWorkspaces) return null
 
     const workspaces = useWorkspaces((s) => s.items)
     const archived = useWorkspaces((s) => s.archivedSessionIds)
     const ids = useSessions((s) => s.ids)
     const byId = useSessions((s) => s.byId)
-    const current = useSessions((s) => s.current)
+    // 当前会话:0.2.0 不再暴露 `s.current`,改为 byId 中 retainedBy.mainView > 0 的那一个
+    // (官方 mainSessionId 同款判定);旧版本回退到 s.current。
+    const current = useSessions((s) => {
+      const byId = s ? s.byId : undefined
+      if (byId !== undefined && byId !== null) {
+        for (const id of Object.keys(byId)) {
+          const row = byId[id]
+          if (row !== undefined && row !== null && row.retainedBy !== undefined && (row.retainedBy.mainView || 0) > 0) return id
+        }
+      }
+      return s === undefined || s === null ? undefined : s.current
+    })
+    const statusesSnap = useSessionStatus ? useSessionStatus((s) => s) : null
 
     const [groupBy, setGroupBy] = React.useState('workspace')
     const [orderBy, setOrderBy] = React.useState('manual')
@@ -532,10 +546,14 @@ const fmtBytes = (n) => {
     const remoteIds = new Set(localHits.map((s) => s.id))
 
     const statusList = (s) => {
-      if (s.pendingInteraction === 'approval') return [{ state: 'warning', label: '等待审批' }]
-      if (s.pendingInteraction === 'plan-review') return [{ state: 'warning', label: '计划待审' }]
-      if (s.pendingInteraction === 'question') return [{ state: 'warning', label: '等待回答' }]
+      const st = statusesSnap !== null && statusesSnap !== undefined && typeof statusesSnap.get === 'function' ? statusesSnap.get(s.id) : undefined
+      const kind = st !== undefined && st !== null && st.pendingInteraction !== undefined ? st.pendingInteraction.kind : s.pendingInteraction
+      if (kind === 'approval') return [{ state: 'warning', label: '等待审批' }]
+      if (kind === 'plan-review') return [{ state: 'warning', label: '计划待审' }]
+      if (kind === 'question') return [{ state: 'warning', label: '等待回答' }]
+      if (st !== undefined && st !== null && st.running === true) return [{ state: 'ongoing', label: '进行中' }]
       if (s.running) return [{ state: 'ongoing', label: '进行中' }]
+      if (st !== undefined && st !== null && st.completionUnread === true) return [{ state: 'done', label: '已完成' }]
       if (s.completed) return [{ state: 'done', label: '已完成' }]
       return [{ state: 'done', label: '空闲' }]
     }

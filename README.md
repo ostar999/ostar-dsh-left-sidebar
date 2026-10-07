@@ -7,7 +7,7 @@
   <b style="font-size: 1.15em;">不牺牲官方体验的工作区管理</b><br />
   官方工作区浏览器的<b>全部功能、样式与交互逐项复刻保留</b>,管理能力以<b>同尺寸按钮</b>叠加在其上<br /><br />
   <a href="https://opensource.org/licenses/MIT"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" /></a>
-  <img alt="version" src="https://img.shields.io/badge/version-0.4.2-4d6bfe" />
+  <img alt="version" src="https://img.shields.io/badge/version-0.4.3-4d6bfe" />
   <img alt="纯 JS 无构建" src="https://img.shields.io/badge/build-none%20%28plain%20JS%29-2fbf71" /><br /><br />
   <img alt="批量删除工作区" src="https://img.shields.io/badge/-批量删除工作区-4d6bfe" />
   <img alt="批量·单选删除会话" src="https://img.shields.io/badge/-批量·单选删除会话-4d6bfe" />
@@ -331,6 +331,17 @@ cat ~/.dsh/profiles/web/package.json
 
 > 本包未发布 npm,统一走 `github:` 依赖安装;若将来发布 npm,`package.json` 的 `files` 字段已声明需要随包分发的内容(`src`、`cordis.patch.yml`、`dsh.plugin.json`、`README.md`、`LICENSE`)。
 
+## 🔧 DSH 版本兼容
+
+本插件按官方公开的槽与 store 契约工作,已在 **DSH 0.1.5-rc.x 与 0.2.0-rc.2** 上验证。0.2.0 的两处契约变化已适配:
+
+| 变化 | 0.1.x | 0.2.0 | 本插件处理 |
+| --- | --- | --- | --- |
+| 当前会话判定 | `useSessions(s => s.current)` | `byId` 中 `retainedBy.mainView > 0`(官方 `mainSessionId`) | 两者兼容:优先新判定,缺失时回退 `s.current` |
+| 会话实时状态 | 汇总行上的 `pendingInteraction` / `running` | 独立状态 store `useSessionStatus`(`running` / `pendingInteraction.kind` / `completionUnread`) | 优先读状态 store,缺失时回退汇总字段 |
+
+> 官方侧边栏槽在 0.2.0 增加了 `sidebar.workspaces.session.menu.item`、`sidebar.session.row.leading` 等扩展子槽。本插件接管主槽后,这些子槽的第三方内容不会出现在插件菜单中(已知限制)。
+
 ## ❓ 常见问题
 
 | 现象 | 原因与解决 |
@@ -348,6 +359,8 @@ cat ~/.dsh/profiles/web/package.json
 | 无法手动排序 | 排序方式需为「手动排序」(视图选项 ☰ 里切换);「最近更新」模式下拖拽不生效(与官方一致) |
 | 复制请求失败(响应:空) | host 路由未注册(见上一条 `404` 项);或 DSH 版本变化导致 `agents.create` / `attachSession` 签名变化,查浏览器 Network 面板与 DSH 控制台 |
 | 安装时出现 `✕ missing peer ...` | 其它插件的 peer 依赖**警告**(react / cordis 由 DSH 运行时提供),不影响安装与运行 |
+| 升级 DSH 后「定位到当前会话」提示"当前没有打开的会话" | 0.2.0 起当前会话不再由 `sessions.current` 提供(改为 `retainedBy.mainView`)。更新到 0.4.3+ |
+| 升级 DSH 后工作区/会话看起来"丢了" | 先确认数据:工作区注册表在 `~/.dsh/storages/workspace.json`,会话日志在 `~/.dsh/sessions/<cwd编码>/<会话id>/`。归档会话默认隐藏(官方 0.2.0 提供归档过滤入口);本插件的「清理孤立数据」只删除**不在任何工作区账目中**的日志 |
 | 点「添加工作区」报 `svc.pickDirectory is not a function` | 0.4.1 前误把目录选择器当成 `ctx.workspaces` 的方法。目录选择与新建会话其实都在 `uiWorkspace` 客户端服务上(`ui-workspace` 插件提供)。更新到 0.4.1+ |
 | 点工作区行右侧「＋」没有反应 | 同上:`startSession` 属 `uiWorkspace.startSession`。0.4.1+ 已按官方入口调用(内部完成工作区连接与导航) |
 | 改了代码没效果 | client 改动需硬刷新;host 改动需重启 DSH;`link:`/拷贝方式确认源码已同步到 profile 包目录 |
