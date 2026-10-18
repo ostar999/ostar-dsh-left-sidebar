@@ -110,6 +110,43 @@ const ICONS = {
     { d: 'M8 6.6a1.4 1.4 0 100 2.8 1.4 1.4 0 000-2.8z' },
     { stroke: true, d: 'M8 0.8v2.4M8 12.8v2.4M0.8 8h2.4M12.8 8h2.4' },
   ] },
+  vFolder: { vb: '0 0 16 16', sw: 1, paths: [
+    { stroke: true, d: 'M1.50439 3.11059C1.50439 2.55831 1.95211 2.1106 2.50439 2.1106H5.43389C5.67773 2.1106 5.91318 2.19969 6.09593 2.36113L7.71649 3.79265C7.89924 3.95409 8.1347 4.04319 8.3785 4.04319H13.4958C14.0481 4.04319 14.4958 4.4909 14.4958 5.04319V12.8894C14.4958 13.4417 14.0481 13.8894 13.4958 13.8894H2.50439C1.95211 13.8894 1.50439 13.4417 1.50439 12.8894V4.04319V3.11059Z' },
+    { stroke: true, d: 'M3.63501 7.66614H12.3647' },
+  ] },
+  vTree: { vb: '0 0 16 16', sw: 1, paths: [
+    { stroke: true, d: 'M14 12.05c0 .8-.65 1.45-1.46 1.45H3.46C2.65 13.5 2 12.85 2 12.05v-8.1c0-.8.65-1.45 1.46-1.45h2.4c.49 0 .94.24 1.21.65l.5.73c.27.4.73.65 1.21.65h3.76c.8 0 1.46.65 1.46 1.45v6.02Z' },
+    { stroke: true, d: 'M8.7 8.1v3M11.2 8.1v3' },
+  ] },
+  vFlat: { vb: '0 0 16 16', sw: 1, paths: [
+    { stroke: true, d: 'M6 3.5h7.5M6 8h7.5M6 12.5h7.5' },
+    { stroke: true, d: 'M2.6 3.5h.01M2.6 8h.01M2.6 12.5h.01' },
+  ] },
+  vSort: { vb: '0 0 16 16', sw: 1, paths: [
+    { stroke: true, d: 'm5.1 6 2.9-2.9L10.9 6' },
+    { stroke: true, d: 'm5.1 10 2.9 2.9 2.9-2.9' },
+  ] },
+  vClock: { vb: '0 0 16 16', sw: 1, paths: [
+    { stroke: true, d: 'M8 14C11.3137 14 14 11.3137 14 8C14 4.68629 11.3137 2 8 2C4.68629 2 2 4.68629 2 8C2 11.3137 4.68629 14 8 14Z' },
+    { stroke: true, d: 'M8 4.31V8.46L11 10.08' },
+  ] },
+  vArchiveOff: { vb: '0 0 16 16', sw: 1, rects: [{ x: 1.9, y: 2.1, width: 12.2, height: 3.4, rx: 1.1 }], paths: [
+    { stroke: true, d: 'M2.95 5.7v4.8a2.9 2.9 0 0 0 2.9 2.9h4.3a2.9 2.9 0 0 0 2.9-2.9V5.7' },
+    { stroke: true, d: 'm2.2 1.3 11.6 12.8' },
+  ] },
+  vQueue: { vb: '0 0 16 16', sw: 1, paths: [
+    { stroke: true, d: 'M3.75 6.25C4.7165 6.25 5.5 5.4665 5.5 4.5C5.5 3.5335 4.7165 2.75 3.75 2.75C2.7835 2.75 2 3.5335 2 4.5C2 5.4665 2.7835 6.25 3.75 6.25Z' },
+    { stroke: true, d: 'M7.5 4.5H13.5' },
+    { stroke: true, d: 'M3.75 13.25C4.7165 13.25 5.5 12.4665 5.5 11.5C5.5 10.5335 4.7165 9.75 3.75 9.75C2.7835 9.75 2 10.5335 2 11.5C2 12.4665 2.7835 13.25 3.75 13.25Z' },
+    { stroke: true, d: 'M7.5 11.5H13.5' },
+  ] },
+  vArchiveCheck: { vb: '0 0 16 16', sw: 1, rects: [{ x: 1.9, y: 2.1, width: 12.2, height: 3.4, rx: 1.1 }], paths: [
+    { stroke: true, d: 'M2.95 5.7v4.8a2.9 2.9 0 0 0 2.9 2.9h4.3a2.9 2.9 0 0 0 2.9-2.9V5.7' },
+    { stroke: true, d: 'm6 9.35 1.4 1.4 2.6-2.6' },
+  ] },
+  check: { vb: '0 0 16 16', sw: 1.5, paths: [
+    { stroke: true, d: 'M13 4.6 6.6 11 3 7.4' },
+  ] },
   copy: { vb: '0 0 16 16', paths: [
     { d: 'M6.14929 4.02032C7.11197 4.02032 7.87983 4.02016 8.49597 4.07598C9.12128 4.13269 9.65792 4.25188 10.1415 4.53106C10.7202 4.8653 11.2008 5.3459 11.535 5.92462C11.8142 6.40818 11.9334 6.94481 11.9901 7.57012C12.0459 8.18625 12.0458 8.95419 12.0458 9.9168C12.0458 10.8795 12.0459 11.6473 11.9901 12.2635C11.9334 12.8888 11.8142 13.4254 11.535 13.909C11.2008 14.4877 10.7202 14.9683 10.1415 15.3025C9.65792 15.5817 9.12128 15.7009 8.49597 15.7576C7.87984 15.8134 7.11196 15.8133 6.14929 15.8133C5.18667 15.8133 4.41874 15.8134 3.80261 15.7576C3.1773 15.7009 2.64067 15.5817 2.1571 15.3025C1.5784 14.9683 1.09778 14.4877 0.76355 13.909C0.484366 13.4254 0.365184 12.8888 0.308472 12.2635C0.252649 11.6473 0.252808 10.8795 0.252808 9.9168C0.252808 8.95418 0.252664 8.18625 0.308472 7.57012C0.365184 6.94481 0.484366 6.40818 0.76355 5.92462C1.09777 5.34589 1.57839 4.86529 2.1571 4.53106C2.64067 4.25188 3.1773 4.13269 3.80261 4.07598C4.41874 4.02017 5.18666 4.02032 6.14929 4.02032ZM6.14929 5.37774C5.16181 5.37774 4.46634 5.37761 3.92566 5.42657C3.39434 5.47472 3.07859 5.56574 2.83582 5.70587C2.4632 5.92106 2.15354 6.2307 1.93835 6.60333C1.79823 6.8461 1.70721 7.16185 1.65906 7.69317C1.6101 8.23385 1.61023 8.92933 1.61023 9.9168C1.61023 10.9043 1.61009 11.5998 1.65906 12.1404C1.70721 12.6717 1.79823 12.9875 1.93835 13.2303C2.15356 13.6029 2.46321 13.9126 2.83582 14.1277C3.07859 14.2679 3.39434 14.3589 3.92566 14.407C4.46634 14.456 5.16182 14.4559 6.14929 14.4559C7.13682 14.4559 7.83224 14.456 8.37292 14.407C8.90425 14.3589 9.21999 14.2679 9.46277 14.1277C9.83535 13.9126 10.145 13.6029 10.3602 13.2303C10.5004 12.9875 10.5914 12.6717 10.6395 12.1404C10.6885 11.5998 10.6884 10.9043 10.6884 9.9168C10.6884 8.92934 10.6885 8.23384 10.6395 7.69317C10.5914 7.16185 10.5004 6.8461 10.3602 6.60333C10.1451 6.23071 9.83536 5.92107 9.46277 5.70587C9.21999 5.56574 8.90424 5.47472 8.37292 5.42657C7.83224 5.3776 7.13682 5.37774 6.14929 5.37774ZM9.80164 0.367975C10.7638 0.367975 11.5314 0.36788 12.1473 0.423639C12.7726 0.480307 13.3093 0.598759 13.7928 0.877741C14.3717 1.21192 14.8521 1.69355 15.1864 2.27227C15.4655 2.75574 15.5857 3.29164 15.6425 3.9168C15.6983 4.53301 15.6971 5.3016 15.6971 6.26446V7.82989C15.6971 8.29264 15.6989 8.58993 15.6649 8.84844C15.4668 10.3525 14.401 11.5738 12.9833 11.9988V10.5467C13.6973 10.1903 14.2105 9.49662 14.3192 8.67169C14.3387 8.52347 14.3407 8.3358 14.3407 7.82989V6.26446C14.3407 5.27706 14.3398 4.58149 14.2909 4.04083C14.2428 3.50968 14.1526 3.19372 14.0126 2.95098C13.7974 2.57849 13.4876 2.26869 13.1151 2.05352C12.8724 1.91347 12.5564 1.82237 12.0253 1.77423C11.4847 1.72528 10.7888 1.7254 9.80164 1.7254H7.71472C6.7562 1.72558 5.92665 2.27697 5.52332 3.07891H4.07019C4.54221 1.51132 5.9932 0.368186 7.71472 0.367975H9.80164Z' },
   ] },
@@ -121,9 +158,25 @@ const MATRIX_CELLS = [[0, 0], [4, 0], [8, 0], [8, 4], [8, 8], [4, 8], [0, 8], [0
 const icon = (name, size) => {
   const def = ICONS[name]
   if (!def) return null
-  return React.createElement('svg', { width: size, height: size, viewBox: def.vb, fill: 'none', xmlns: 'http://www.w3.org/2000/svg' },
-    def.paths.map((p, i) => React.createElement('path', { key: i, d: p.d, fill: p.stroke ? 'none' : 'currentColor', stroke: p.stroke ? 'currentColor' : undefined, strokeWidth: p.stroke ? 1.4 : undefined, strokeLinejoin: p.stroke ? 'round' : undefined, opacity: p.opacity ? p.opacity : undefined, transform: p.t ? p.t : undefined, fillRule: p.fr ? p.fr : undefined, clipRule: p.cr ? p.cr : undefined })),
-  )
+  const sw = def.sw !== undefined ? def.sw : 1.4
+  const children = []
+  if (Array.isArray(def.rects)) {
+    def.rects.forEach((r, i) => children.push(React.createElement('rect', { key: 'r' + i, x: r.x, y: r.y, width: r.width, height: r.height, rx: r.rx !== undefined ? r.rx : undefined, fill: 'none', stroke: 'currentColor', strokeWidth: sw })))
+  }
+  def.paths.forEach((p, i) => children.push(React.createElement('path', {
+    key: i,
+    d: p.d,
+    fill: p.stroke ? 'none' : 'currentColor',
+    stroke: p.stroke ? 'currentColor' : undefined,
+    strokeWidth: p.stroke ? (p.sw !== undefined ? p.sw : sw) : undefined,
+    strokeLinejoin: p.stroke ? 'round' : undefined,
+    strokeLinecap: p.stroke ? 'round' : undefined,
+    opacity: p.opacity ? p.opacity : undefined,
+    transform: p.t ? p.t : undefined,
+    fillRule: p.fr ? p.fr : undefined,
+    clipRule: p.cr ? p.cr : undefined,
+  })))
+  return React.createElement('svg', { width: size, height: size, viewBox: def.vb, fill: 'none', xmlns: 'http://www.w3.org/2000/svg' }, children)
 }
 
 const stateDot = (state) => state === 'ongoing'
@@ -198,8 +251,15 @@ const fmtBytes = (n) => {
 .wsmgr-ibtn.on{color:var(--dsw-alias-brand-primary,#4c6ef5)}
 .wsmgr-hactions{opacity:1;display:flex;align-items:center;gap:2px;flex:none;overflow:visible}
 .wsmgr-menu{position:absolute;top:34px;right:0;z-index:1100;box-sizing:border-box;padding:4px;display:flex;flex-direction:column;gap:0;border:1px solid var(--dsw-alias-border-inverted,rgba(128,128,128,.5));border-radius:12px;background:var(--dsw-specific-menu,var(--dsw-alias-bg-layer-3,#242428));box-shadow:var(--dsw-shadow-lv3,0 8px 24px rgba(0,0,0,.4));min-width:218px;max-width:360px}
+.wsmgr-viewmenu{min-width:200px;padding:6px}
 .wsmgr-menu-sec{margin-bottom:4px}
-.wsmgr-menu-title{font-size:12px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8a8a8a);padding:4px 7px}
+.wsmgr-menu-title{padding:6px 8px 2px;font-size:11px;line-height:16px;color:var(--dsw-alias-label-tertiary,#8a8a8a)}
+.wsmgr-menu-sep{height:1px;margin:5px 6px;background:var(--dsw-alias-border-l2,rgba(128,128,128,.22))}
+.wsmgr-menu-item{display:flex;align-items:center;gap:8px;width:100%;min-height:28px;padding:0 8px;border:none;border-radius:6px;background:transparent;cursor:pointer;font-size:13px;line-height:18px;color:var(--dsw-alias-label-primary,#e8e8e8);text-align:left;box-sizing:border-box}
+.wsmgr-menu-item:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
+.wsmgr-menu-item-icon{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-label-secondary,#9a9a9a)}
+.wsmgr-menu-item-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wsmgr-menu-item-check{flex:none;display:inline-flex;align-items:center;color:var(--dsw-alias-label-primary,#e8e8e8)}
 .wsmgr-menu-opt{display:flex;align-items:center;gap:6px;width:100%;min-height:26px;padding:3px 7px;border:none;border-radius:5px;background:transparent;cursor:pointer;font-size:12px;line-height:18px;color:var(--dsw-alias-label-primary,#e8e8e8);text-align:left;box-sizing:border-box}
 .wsmgr-menu-opt:hover{background:var(--dsw-alias-interactive-bg-hover,rgba(128,128,128,.1))}
 .wsmgr-menu-opt.on{color:var(--dsw-alias-brand-primary,#4c6ef5)}
@@ -391,8 +451,43 @@ const fmtBytes = (n) => {
     })
     const statusesSnap = useSessionStatus ? useSessionStatus((s) => s) : null
 
-    const [groupBy, setGroupBy] = React.useState('workspace')
-    const [orderBy, setOrderBy] = React.useState('manual')
+    // 视图选项(与官方 0.2.1 对齐):分组方式 / 排序方式 / 归档筛选,持久化到 localStorage。
+    const VIEW_KEY = 'ostar-dsh-left-sidebar.view'
+    const readView = () => {
+      try {
+        const raw = window.localStorage.getItem(VIEW_KEY)
+        if (raw === null) return null
+        const v = JSON.parse(raw)
+        return v !== null && typeof v === 'object' ? v : null
+      } catch (e) { return null }
+    }
+    const [groupBy, setGroupBy] = React.useState(() => {
+      const v = readView()
+      const g = v === null ? undefined : v.groupBy
+      return g === 'workspace' || g === 'workspaceTree' || g === 'flat' ? g : 'workspace'
+    })
+    const [orderBy, setOrderBy] = React.useState(() => {
+      const v = readView()
+      const o = v === null ? undefined : v.orderBy
+      return o === 'manual' || o === 'updated' ? o : 'updated'
+    })
+    const [archivedFilter, setArchivedFilter] = React.useState(() => {
+      const v = readView()
+      const f = v === null ? undefined : v.archivedFilter
+      return f === 'default' || f === 'show' || f === 'only' ? f : 'default'
+    })
+    const setViewPersist = (patch) => {
+      if (patch.groupBy !== undefined) setGroupBy(patch.groupBy)
+      if (patch.orderBy !== undefined) setOrderBy(patch.orderBy)
+      if (patch.archivedFilter !== undefined) setArchivedFilter(patch.archivedFilter)
+      try {
+        window.localStorage.setItem(VIEW_KEY, JSON.stringify({
+          groupBy: patch.groupBy !== undefined ? patch.groupBy : groupBy,
+          orderBy: patch.orderBy !== undefined ? patch.orderBy : orderBy,
+          archivedFilter: patch.archivedFilter !== undefined ? patch.archivedFilter : archivedFilter,
+        }))
+      } catch (e) { /* 忽略 */ }
+    }
     const [expanded, setExpanded] = React.useState(() => new Set())
     const [manage, setManage] = React.useState(false)
     const [selWs, setSelWs] = React.useState(() => new Set())
@@ -491,7 +586,14 @@ const fmtBytes = (n) => {
     }, [q])
 
     const archivedSet = new Set(archived)
-    const visible = (s) => s.origin !== 'subagent' && !archivedSet.has(s.id) && (!s.blank || s.id === current)
+    // 归档筛选(官方三档):default=隐藏已归档 / show=全部对话(显示已归档) / only=仅显示已归档
+    const visible = (s) => {
+      if (s.origin === 'subagent') return false
+      if (s.blank && s.id !== current) return false
+      if (archivedFilter === 'only') return archivedSet.has(s.id)
+      if (archivedFilter === 'show') return true
+      return !archivedSet.has(s.id)
+    }
 
     // 分组视图过滤:仅展示当前标签(全部/收藏/自定义分组)下命中的工作区。
     const visibleWorkspaces = (() => {
@@ -517,6 +619,7 @@ const fmtBytes = (n) => {
         if (!visible(s)) continue
         members.push(s)
       }
+      if (archivedFilter === 'only' && members.length === 0) continue
       if (orderBy === 'updated') members.sort(byRecency)
       groups.push({ key: w.workspaceId, label: w.title, path: w.path, count: members.length, members, createdAt: w.createdAt })
     }
@@ -1083,7 +1186,7 @@ const fmtBytes = (n) => {
       )
     }
 
-    const projectRow = (g) => {
+    const projectRow = (g, depth) => {
       const isExpanded = expanded.has(g.key)
       const containsCurrent = g.key !== '' && g.members.some((m) => m.id === current)
       const isRenaming = renaming && renaming.kind === 'ws' && renaming.id === g.key
@@ -1093,6 +1196,7 @@ const fmtBytes = (n) => {
       return React.createElement('div', { key: g.key },
         React.createElement('div', {
           className: 'wsmgr-projectRow' + (rowMenu && rowMenu.id === g.key ? ' menuOpen' : '') + (dropMarker === 'before' ? ' dropBefore' : '') + (dropMarker === 'after' ? ' dropAfter' : ''),
+          style: depth !== undefined && depth > 0 ? { paddingInlineStart: (8 + depth * 12) + 'px' } : undefined,
           onClick: () => toggleGroup(g.key),
           draggable: isReal,
           onDragStart: (e) => { if (!isReal) return; setHc(null); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', g.key); setDrag({ kind: 'ws', id: g.key }) },
@@ -1125,7 +1229,47 @@ const fmtBytes = (n) => {
       )
     }
 
-    const groupBlocks = groups.map(projectRow)
+    // 「按工作区树」:按路径最长前缀把子工作区嵌套到父工作区下(与官方 nestWorkspaces 同款);
+    // 仅在父工作区展开时渲染子工作区,子级行缩进 12px/层。
+    const wsParents = (() => {
+      const map = new Map()
+      if (groupBy !== 'workspaceTree') return map
+      const byPath = new Map()
+      for (const w of visibleWorkspaces) {
+        if (typeof w.path === 'string' && w.path !== '') byPath.set(w.path.replace(/\/+$/, ''), w.workspaceId)
+      }
+      const roots = Array.from(byPath.keys())
+      for (const w of visibleWorkspaces) {
+        if (typeof w.path !== 'string' || w.path === '') continue
+        const child = w.path.replace(/\/+$/, '')
+        let owner = null
+        let bestLen = -1
+        for (const root of roots) {
+          if (root !== '' && child !== root && child.indexOf(root + '/') === 0 && root.length > bestLen) { owner = root; bestLen = root.length }
+        }
+        if (owner !== null) map.set(w.workspaceId, byPath.get(owner))
+      }
+      return map
+    })()
+    const childrenByParent = (() => {
+      const rendered = new Set(groups.map((g) => g.key))
+      const map = new Map()
+      for (const g of groups) {
+        let parent = wsParents.get(g.key)
+        while (parent !== undefined && !rendered.has(parent)) parent = wsParents.get(parent)
+        const list = map.get(parent)
+        if (list === undefined) map.set(parent, [g])
+        else list.push(g)
+      }
+      return map
+    })()
+    const renderGroupTree = (g, depth) => {
+      const row = projectRow(g, depth)
+      const children = childrenByParent.get(g.key)
+      if (children === undefined || children.length === 0 || !expanded.has(g.key)) return [row]
+      return [row].concat(children.reduce((acc, child) => acc.concat(renderGroupTree(child, depth + 1)), []))
+    }
+    const groupBlocks = (childrenByParent.get(undefined) || []).reduce((acc, g) => acc.concat(renderGroupTree(g, 0)), [])
     const flatBlocks = flatRows.map((m) => sessionRow(m, undefined))
 
     const searchRows = []
@@ -1300,6 +1444,20 @@ const fmtBytes = (n) => {
       )
     }
 
+    // 视图选项菜单条目(官方 Menu 的 label / item / separator 三态)
+    const viewMenuLabel = (text) => React.createElement('div', { className: 'wsmgr-menu-title' }, text)
+    const viewMenuSep = () => React.createElement('div', { className: 'wsmgr-menu-sep' })
+    const viewMenuItem = (id, label, iconName, selected, onPick) => React.createElement('button', {
+      key: id,
+      type: 'button',
+      className: 'wsmgr-menu-item' + (selected ? ' on' : ''),
+      onClick: (e) => { e.stopPropagation(); onPick(); setMenuOpen(false) },
+    },
+      React.createElement('span', { className: 'wsmgr-menu-item-icon' }, icon(iconName, 16)),
+      React.createElement('span', { className: 'wsmgr-menu-item-label' }, label),
+      selected ? React.createElement('span', { className: 'wsmgr-menu-item-check' }, icon('check', 14)) : null,
+    )
+
     let orphansEl = null
     if (orphans) {
       const iw = typeof window !== 'undefined' ? window.innerWidth : 1200
@@ -1361,17 +1519,20 @@ const fmtBytes = (n) => {
           wide ? React.createElement(TButton, { iconName: 'chevronUp', size: 14, label: '折叠全部', delay: 500, cls: 'wsmgr-ibtn', onClick: collapseAll }) : null,
           React.createElement(TButton, { iconName: 'checklist', size: 14, label: manage ? '退出批量选中' : '批量选中', delay: 500, cls: 'wsmgr-ibtn' + (manage ? ' on' : ''), onClick: () => { if (!wide) { setManage(!manage); if (!manage) expandSidebar(); } else { setManage(!manage); setConfirming(null); setMenuOpen(false) } } }),
         ),
-        menuOpen ? React.createElement('div', { className: 'wsmgr-menu', onClick: (e) => e.stopPropagation() },
-          React.createElement('div', { className: 'wsmgr-menu-sec' },
-            React.createElement('div', { className: 'wsmgr-menu-title' }, '分组方式'),
-            React.createElement('div', { className: 'wsmgr-menu-opt' + (groupBy === 'workspace' ? ' on' : ''), onClick: () => { setGroupBy('workspace'); setMenuOpen(false) } }, '按工作区'),
-            React.createElement('div', { className: 'wsmgr-menu-opt' + (groupBy === 'flat' ? ' on' : ''), onClick: () => { setGroupBy('flat'); setMenuOpen(false) } }, '单列表'),
-          ),
-          React.createElement('div', { className: 'wsmgr-menu-sec' },
-            React.createElement('div', { className: 'wsmgr-menu-title' }, '排序方式'),
-            React.createElement('div', { className: 'wsmgr-menu-opt' + (orderBy === 'manual' ? ' on' : ''), onClick: () => { setOrderBy('manual'); setMenuOpen(false) } }, '手动排序'),
-            React.createElement('div', { className: 'wsmgr-menu-opt' + (orderBy === 'updated' ? ' on' : ''), onClick: () => { setOrderBy('updated'); setMenuOpen(false) } }, '最近更新'),
-          ),
+        menuOpen ? React.createElement('div', { className: 'wsmgr-menu wsmgr-viewmenu', onClick: (e) => e.stopPropagation() },
+          viewMenuLabel('分组方式'),
+          viewMenuItem('workspace', '按工作区', 'vFolder', groupBy === 'workspace', () => setViewPersist({ groupBy: 'workspace' })),
+          viewMenuItem('workspace-tree', '按工作区树', 'vTree', groupBy === 'workspaceTree', () => setViewPersist({ groupBy: 'workspaceTree' })),
+          viewMenuItem('flat', '单列表', 'vFlat', groupBy === 'flat', () => setViewPersist({ groupBy: 'flat' })),
+          viewMenuSep(),
+          viewMenuLabel('排序方式'),
+          viewMenuItem('manual', '手动排序', 'vSort', orderBy === 'manual', () => setViewPersist({ orderBy: 'manual' })),
+          viewMenuItem('updated', '最近更新', 'vClock', orderBy === 'updated', () => setViewPersist({ orderBy: 'updated' })),
+          viewMenuSep(),
+          viewMenuLabel('筛选会话'),
+          viewMenuItem('hide-archived', '隐藏已归档', 'vArchiveOff', archivedFilter === 'default', () => setViewPersist({ archivedFilter: 'default' })),
+          viewMenuItem('show-archived', '全部对话(显示已归档)', 'vQueue', archivedFilter === 'show', () => setViewPersist({ archivedFilter: 'show' })),
+          viewMenuItem('only-archived', '仅显示已归档', 'vArchiveCheck', archivedFilter === 'only', () => setViewPersist({ archivedFilter: 'only' })),
         ) : null,
       ),
       wide && groupsData ? React.createElement('div', { className: 'wsmgr-groups' },
